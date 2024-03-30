@@ -7,7 +7,7 @@
         <div class="pagetitle">
           <h1 class="fw-bold">TRUYỆN ĐỀ CỬ</h1>
         </div>
-        <div class="card">
+        <div class="card mb-0">
           <div class="card-body">
             <!-- Slides with captions -->
             <div
@@ -107,7 +107,7 @@
         <!-- list item -->
         <div class="d-flex flex-wrap" style="gap: 10px">
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -129,7 +129,7 @@
           </div>
           <!-- End item -->
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -151,7 +151,7 @@
           </div>
           <!-- End item -->
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -173,7 +173,7 @@
           </div>
           <!-- End item -->
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -195,7 +195,7 @@
           </div>
           <!-- End item -->
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -217,7 +217,7 @@
           </div>
           <!-- End item -->
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -239,7 +239,7 @@
           </div>
           <!-- End item -->
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -261,7 +261,7 @@
           </div>
           <!-- End item -->
           <!-- item -->
-          <div class="card">
+          <div class="card mb-0">
             <div
               class="card-body col-lg-2 mt-3"
               style="width: calc((1543px - 40px) / 5)"
@@ -291,8 +291,9 @@
 </template>
 
 <script>
-import SideBar from "../Sidebar.vue";
-import Header from "../Header.vue";
+import SideBar from "./Sidebar.vue";
+import Header from "../../components/Header.vue";
+
 export default {
   name: "HomePage",
   components: { SideBar, Header },
