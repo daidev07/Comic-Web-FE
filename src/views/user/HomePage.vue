@@ -291,8 +291,8 @@
 </template>
 
 <script>
-import SideBar from "../Sidebar.vue";
-import Header from "../Header.vue";
+import SideBar from "./Sidebar.vue";
+import Header from "../../components/Header.vue";
 export default {
   name: "HomePage",
   components: { SideBar, Header },
