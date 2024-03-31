@@ -30,8 +30,7 @@
   <!-- End Sidebar-->
 </template>
 <script>
-
-import { RouterLink } from 'vue-router';
+import { RouterLink } from "vue-router";
 
 export default {
   name: "SideBar",

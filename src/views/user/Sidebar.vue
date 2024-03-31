@@ -3,16 +3,16 @@
   <aside id="sidebar" class="sidebar">
     <ul class="sidebar-nav" id="sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <RouterLink class="nav-link" :to="{ path: '/' }">
           <i class="bi bi-grid"></i>
           <span>Trang chủ</span>
-        </a>
+        </RouterLink>
       </li>
       <!-- End Dashboard Nav -->
 
       <li class="nav-item">
         <a
-          class="nav-link collapsed"
+          class="nav-link"
           data-bs-target="#components-nav"
           data-bs-toggle="collapse"
           href="#"
@@ -26,34 +26,58 @@
           data-bs-parent="#sidebar-nav"
         >
           <li>
-            <a href="components-alerts.html">
-              <i class="bi bi-circle"></i><span>Hành động</span>
-            </a>
+            <RouterLink
+              class="nav-link"
+              :to="{ path: '/theloaitruyen/hanhdong' }"
+            >
+              <i class="bi bi-circle"></i>
+              <span>Hành động</span>
+            </RouterLink>
           </li>
           <li>
-            <a href="components-accordion.html">
-              <i class="bi bi-circle"></i><span>Xuyên không</span>
-            </a>
+            <RouterLink
+              class="nav-link"
+              :to="{ path: '/theloaitruyen/xuyenkhong' }"
+            >
+              <i class="bi bi-circle"></i>
+              <span>Xuyên không</span>
+            </RouterLink>
           </li>
           <li>
-            <a href="components-badges.html">
-              <i class="bi bi-circle"></i><span>Hồi quy</span>
-            </a>
+            <RouterLink
+              class="nav-link"
+              :to="{ path: '/theloaitruyen/hoiquy' }"
+            >
+              <i class="bi bi-circle"></i>
+              <span>Hồi quy</span>
+            </RouterLink>
           </li>
           <li>
-            <a href="components-breadcrumbs.html">
-              <i class="bi bi-circle"></i><span>Kiếm hiệp</span>
-            </a>
+            <RouterLink
+              class="nav-link"
+              :to="{ path: '/theloaitruyen/kiemhiep' }"
+            >
+              <i class="bi bi-circle"></i>
+              <span>Kiếm hiệp</span>
+            </RouterLink>
           </li>
           <li>
-            <a href="components-buttons.html">
-              <i class="bi bi-circle"></i><span>Tận thế</span>
-            </a>
+            <RouterLink
+              class="nav-link"
+              :to="{ path: '/theloaitruyen/tanthe' }"
+            >
+              <i class="bi bi-circle"></i>
+              <span>Tận thế</span>
+            </RouterLink>
           </li>
           <li>
-            <a href="components-cards.html">
-              <i class="bi bi-circle"></i><span>Hiện đại</span>
-            </a>
+            <RouterLink
+              class="nav-link"
+              :to="{ path: '/theloaitruyen/hiendai' }"
+            >
+              <i class="bi bi-circle"></i>
+              <span>Hiện đại</span>
+            </RouterLink>
           </li>
         </ul>
       </li>
@@ -61,7 +85,7 @@
 
       <li class="nav-item">
         <a
-          class="nav-link collapsed"
+          class="nav-link"
           data-bs-target="#charts-nav"
           data-bs-toggle="collapse"
           href="#"
@@ -75,37 +99,40 @@
           data-bs-parent="#sidebar-nav"
         >
           <li>
-            <a href="charts-chartjs.html">
-              <i class="bi bi-circle"></i><span>Top ngày</span>
-            </a>
+            <RouterLink class="nav-link" :to="{ path: '/toptruyen/topngay' }">
+              <i class="bi bi-circle"></i>
+              <span>Top ngày</span>
+            </RouterLink>
           </li>
           <li>
-            <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>Top tuần</span>
-            </a>
+            <RouterLink class="nav-link" :to="{ path: '/toptruyen/toptuan' }">
+              <i class="bi bi-circle"></i>
+              <span>Top tuần</span>
+            </RouterLink>
           </li>
           <li>
-            <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>Top tháng</span>
-            </a>
+            <RouterLink class="nav-link" :to="{ path: '/toptruyen/topthang' }">
+              <i class="bi bi-circle"></i>
+              <span>Top tháng</span>
+            </RouterLink>
           </li>
         </ul>
       </li>
       <!-- End Top -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
+        <RouterLink class="nav-link" :to="{ path: '/lichsu' }">
           <i class="bi bi-card-list"></i>
           <span>Lịch sử</span>
-        </a>
+        </RouterLink>
       </li>
       <!-- End Lịch sử -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="pages-register.html">
+        <RouterLink class="nav-link" :to="{ path: '/yeuthich' }">
           <i class="bi bi-gem"></i>
           <span>Danh sách yêu thích</span>
-        </a>
+        </RouterLink>
       </li>
       <!-- End Favourite -->
     </ul>
@@ -118,3 +145,14 @@ export default {
   components: {},
 };
 </script>
+
+<style>
+.nav-link {
+  color: #012970 !important;
+  background: #fff !important;
+}
+
+.router-link-active {
+  color: #4154f1 !important;
+}
+</style>

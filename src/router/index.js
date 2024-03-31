@@ -5,6 +5,10 @@ import Dashboard from "@/views/admin/Dashboard.vue";
 import Register from "@/components/Register.vue";
 import TheLoai from "@/views/admin/TheLoai.vue";
 import User from "@/views/admin/User.vue";
+import TheLoaiTruyen from "@/views/user/TheLoaiTruyen.vue";
+import TopTruyen from "@/views/user/TopTruyen.vue";
+import LichSu from "@/views/user/LichSu.vue";
+import YeuThich from "@/views/user/YeuThich.vue";
 
 const routes = [
   {
@@ -42,6 +46,73 @@ const routes = [
         component: User,
       },
     ],
+  },
+  {
+    path: "/theloaitruyen",
+    name: "theloaitruyen",
+    children: [
+      {
+        path: "hanhdong",
+        name: "hanhdong",
+        component: TheLoaiTruyen,
+      },
+      {
+        path: "xuyenkhong",
+        name: "xuyenkhong",
+        component: TheLoaiTruyen,
+      },
+      {
+        path: "hoiquy",
+        name: "hoiquy",
+        component: TheLoaiTruyen,
+      },
+      {
+        path: "kiemhiep",
+        name: "kiemhiep",
+        component: TheLoaiTruyen,
+      },
+      {
+        path: "tanthe",
+        name: "tanthe",
+        component: TheLoaiTruyen,
+      },
+      {
+        path: "hiendai",
+        name: "hiendai",
+        component: TheLoaiTruyen,
+      },
+    ],
+  },
+  {
+    path: "/toptruyen",
+    name: "toptruyen",
+    children: [
+      {
+        path: "topngay",
+        name: "topngay",
+        component: TopTruyen,
+      },
+      {
+        path: "toptuan",
+        name: "toptuan",
+        component: TopTruyen,
+      },
+      {
+        path: "topthang",
+        name: "topthang",
+        component: TopTruyen,
+      },
+    ],
+  },
+  {
+    path: "/lichsu",
+    name: "lichsu",
+    component: LichSu,
+  },
+  {
+    path: "/yeuthich",
+    name: "yeuthich",
+    component: YeuThich,
   },
 ];
 
