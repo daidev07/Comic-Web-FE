@@ -9,6 +9,8 @@ import TheLoaiTruyen from "@/views/user/TheLoaiTruyen.vue";
 import TopTruyen from "@/views/user/TopTruyen.vue";
 import LichSu from "@/views/user/LichSu.vue";
 import YeuThich from "@/views/user/YeuThich.vue";
+import ChiTietTruyen from "@/views/user/ChiTietTruyen.vue";
+import Reading from "@/views/user/Reading.vue";
 
 const routes = [
   {
@@ -113,6 +115,16 @@ const routes = [
     path: "/yeuthich",
     name: "yeuthich",
     component: YeuThich,
+  },
+  {
+    path: "/chitiet",
+    name: "chitiet",
+    component: ChiTietTruyen,
+  },
+  {
+    path: "/reading",
+    name: "reading",
+    component: Reading,
   },
 ];
 
