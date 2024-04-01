@@ -27,22 +27,25 @@
                             <li class="table-row" v-for="story in stories" :key="stories.id">
                                 <div class="col col-3 text-center">
                                     <img :src="'data:image/jpeg;base64,' + story.avt" alt="Story Avatar"
-                                        style="max-width: 100px; max-height: 100px;">
+                                        style="max-width: 100px; max-height: 50px;">
                                 </div>
 
-                                <div class="col col-2">{{ story.ten }}</div>
+                                <div class="col col-2 h5">{{ story.ten }}</div>
                                 <div class="col col-1 text-center" data-label="Customer Name">
-                                    <button class="btn" style="background-color: #1e3a63; color: white">
+                                    <button class="btn" style="background-color: #1e3a63; color: white"
+                                        data-bs-toggle="modal" data-bs-target="#modalInfo" @click=takeStory(story)>
                                         <i class="bi bi-info-circle"></i>
                                     </button>
                                 </div>
                                 <div class="col col-1 text-center" data-label="Customer Name">
-                                    <button class="btn" style="background-color: #1e3a63; color: white">
+                                    <button class="btn" style="background-color: #1e3a63; color: white"
+                                        data-bs-toggle="modal" data-bs-target="#modalUpdate">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </div>
                                 <div class="col col-1 text-center" data-label="Amount">
-                                    <button class="btn" style="background-color: #1e3a63; color: white">
+                                    <button class="btn" style="background-color: #1e3a63; color: white"
+                                        @click=deleteStory(story.id)>
                                         <i class="bi bi-trash3"></i>
                                     </button>
                                 </div>
@@ -55,7 +58,7 @@
         <!-- End #main -->
     </div>
 
-    <!-- Modal -->
+    <!-- Modal thêm -->
     <div class="modal fade" id="modalThem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -94,10 +97,135 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Hủy
                     </button>
-                    <button type="button" class="btn btn-primary" @click="addStory">
+                    <button type="button" class="btn btn-primary" id="liveToastBtn" data-bs-dismiss="modal" @click="addStory">
                         Thêm
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thông tin -->
+    <div class="modal fade" id="modalInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title" id="staticBackdropLabel">Thông tin truyện</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="fw-bold">
+                        Ảnh truyện
+                    </div>
+                    <div class="text-center mb-3">
+                        <img v-if="detailStory && detailStory.avt" :src="'data:image/jpeg;base64,' + detailStory.avt"
+                            alt="Story Avatar" style="max-width: 400px; max-height: 150px;" class="mx-auto">
+                    </div>
+
+                    <div class="d-flex mt-5">
+                        <div class="col-4 fw-bold">
+                            Tên truyện:
+                        </div>
+                        <div class="col-9">{{ detailStory ? detailStory.ten : '' }}</div>
+                    </div>
+
+                    <div class="d-flex mt-5">
+                        <div class="col-4 fw-bold">
+                            Tác giả:
+                        </div>
+                        <div class="col-9">{{ detailStory ? detailStory.tacgia : '' }}</div>
+                    </div>
+
+                    <div class="d-flex mt-5">
+                        <div class="col-4 fw-bold">
+                            Thể loại:
+                        </div>
+                        <div class="col-9">
+                            {{ detailStory && detailStory.categoriesForStory ? detailStory.categoriesForStory.join(', ')
+                                : '' }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex mt-5">
+                        <div class="col-4 fw-bold">
+                            Mô tả:
+                        </div>
+                        <div class="col-9">{{ detailStory ? detailStory.gioithieu : '' }}</div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Đóng
+                    </button>
+                    <button type="button" class="btn btn-primary" id="liveToastBtn" data-bs-toggle="modal"
+                        data-bs-target="#modalUpdate" @click="updateStory()">
+                        Cập nhật
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal cập nhật -->
+    <div class="modal fade" id="modalUpdate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Cập nhật truyện</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="fw-bold">
+                        Ảnh đại diện truyện <span class="text-danger">*</span>
+                    </div>
+                    <input type="file" class="form-control" @change="uploadFile" />
+                    <div class="mt-2 fw-bold">
+                        Tên truyện <span class="text-danger">*</span>
+                    </div>
+                    <input type="text" class="form-control" v-model="newStory.ten" />
+                    <div class="mt-2 fw-bold">
+                        Tác giả <span class="text-danger">*</span>
+                    </div>
+                    <input type="text" class="form-control" v-model="newStory.tacgia" />
+                    <div class="mt-2 fw-bold">
+                        Thể loại <span class="text-danger">*</span>
+                    </div>
+                    <div class="form-check form-check-inline" v-for="category in categories" :key="categories.id">
+                        <input class="form-check-input" type="checkbox"
+                            @change="updateSelectedCategoryIds(category.id)" />
+                        <label class="form-check-label">{{ category.ten }}</label>
+                    </div>
+                    <div class="mt-2 fw-bold">
+                        Mô tả <span class="text-danger">*</span>
+                    </div>
+                    <textarea class="form-control" v-model="newStory.gioithieu"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Hủy
+                    </button>
+                    <button type="button" class="btn btn-primary" id="liveToastBtn" @click="addStory">
+                        Chấp nhận
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Thông báo</strong>
+                <small>Ngay bây giờ</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Thêm thành công
             </div>
         </div>
     </div>
@@ -107,6 +235,9 @@
 import SideBar from "./SidebarAdmin.vue";
 import Header from "../../components/Header.vue";
 import axios from "axios";
+import swal from 'sweetalert2';
+import { toast } from "vue3-toastify";
+import 'vue3-toastify/dist/index.css'
 
 export default {
     name: "HomePage",
@@ -115,6 +246,7 @@ export default {
             apiUrl: process.env.VUE_APP_URL,
             stories: [],
             categories: [],
+            categoriesForStory: [],
             cateOptions: [],
             newStory: {
                 avt: null,
@@ -123,6 +255,8 @@ export default {
                 idTheLoais: [],
                 gioithieu: null
             },
+            detailStory: null,
+            selected: null,
         };
     },
     components: { SideBar, Header },
@@ -152,7 +286,6 @@ export default {
                 console.error("Đã xảy ra lỗi khi đọc file:", error);
             });
         },
-
         updateSelectedCategoryIds(id) {
             const idIndex = this.newStory.idTheLoais.findIndex(
                 (categoryId) => categoryId === id
@@ -164,7 +297,6 @@ export default {
             }
             console.log(this.newStory.idTheLoais);
         },
-
         async ShowStories() {
             try {
                 const reponse = await axios.get("http://localhost:8000/api/home");
@@ -172,6 +304,18 @@ export default {
                 console.log("DANH SÁCH TRUYỆN", this.stories);
             } catch (error) {
                 console.error("Error fetching stories data:", error);
+            }
+        },
+        async fetchStoryCategories() {
+            for (let i = 0; i < this.stories.length; i++) {
+                const storyId = this.stories[i].id;
+                try {
+                    // Gọi API để lấy danh sách thể loại cho mỗi truyện
+                    const response = await axios.get(`http://localhost:8000/api/story/${storyId}/categories`);
+                    this.stories[i].storyCategories = response.data;
+                } catch (error) {
+                    console.error(`Error fetching categories for story with ID ${storyId}:`, error);
+                }
             }
         },
         async ShowCate() {
@@ -185,15 +329,68 @@ export default {
         },
         async addStory() {
             try {
-                const response = await axios.post(
-                    "http://localhost:8000/api/home/add", this.newStory
-                );
-                console.log("Post add story", response.data);
+                const response = await axios.post("http://localhost:8000/api/home/add", this.newStory);
                 this.ShowStories();
+                console.log("Post add story", response.data);
+                swal.fire({
+                    title: "Đã thêm",
+                    text: "Đã thêm truyện mới thành công",
+                    icon: "success"
+                });
             } catch (error) {
                 console.error("Error adding story:", error);
             }
         },
+        async takeStory(story) {
+            this.detailStory = story
+            console.log(this.detailStory);
+            try {
+                const response = await axios.get(this.apiUrl + `/api/home/${story.id}/categories`);
+                const categories = response.data;
+                const categoryNames = categories.map(category => category.ten);
+                this.detailStory.categoriesForStory = categoryNames;
+                console.log("Truyện có id là ", this.detailStory.id + " có thể loại: " + categoryNames);
+            } catch (error) {
+                console.error("Error taking categories for story:", error);
+            }
+        },
+        async updateStory() {
+
+        },
+        deleteStory(strId) {
+            this.selected = this.stories.find(story => story.id === strId)
+            const deleteStoryId = this.selected.id
+            swal.fire({
+                title: "Bạn muốn xóa?",
+                text: "Bạn có chắc chắn muốn xóa truyện không?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Có, hãy xóa",
+                cancelButtonColor: "#d33",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    axios.delete(this.apiUrl + `/api/home/remove/${deleteStoryId}`)
+                        .then(response => {
+                            swal.fire({
+                                title: "Đã xóa",
+                                text: "Bạn đã xóa truyện thành công",
+                                icon: "success"
+                            });
+                            this.ShowStories();
+                        })
+                        .catch(error => {
+                            swal.fire({
+                                title: "Lỗi",
+                                text: "Có lỗi xảy ra khi xóa truyện",
+                                icon: "error"
+                            });
+                            console.error(error);
+                        });
+                }
+            });
+        }
+
     },
 };
 </script>
@@ -279,7 +476,11 @@ h2 {
     }
 
     .col-4 {
-        flex-basis: 25%;
+        flex-basis: 15%;
+    }
+
+    .col-5 {
+        flex-basis: 70%;
     }
 
     @media all and (max-width: 767px) {
