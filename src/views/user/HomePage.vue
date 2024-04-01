@@ -118,9 +118,12 @@
                 alt="..."
                 style="height: 300px"
               />
-              <a class="card-text text-center d-block mt-2">
+              <RouterLink
+                class="card-text text-center d-block mt-2"
+                :to="{ path: '/chitiet' }"
+              >
                 Cốt binh trở lại
-              </a>
+              </RouterLink>
               <div class="d-flex justify-content-between mt-2">
                 <a>Chap 01</a>
                 <span>10 phút trước</span>
