@@ -25,7 +25,9 @@
 
                 <!-- Submit button -->
                 <div class="">
-                  <button type="button" class="btn btn-primary col-4 mb-4" @click="loginUser()">Đăng nhập</button> <RouterLink :to="{ path: '/' }"><button type="button" class="btn btn-danger col-4 mb-4">Trang chủ</button></RouterLink>
+                  <button type="button" class="btn btn-primary col-4 mb-4" @click="loginUser()">Đăng nhập</button>
+                  <RouterLink :to="{ path: '/' }"><button type="button" class="btn btn-danger col-4 mb-4">Trang
+                      chủ</button></RouterLink>
                 </div>
 
                 <div class="text-center">
@@ -91,7 +93,13 @@ export default {
         const userFromApi = response.data;
         // Nếu người dùng tồn tại, tiến hành đăng nhập
         localStorage.setItem("loggedInUser", JSON.stringify(userFromApi));
-        Swal.fire("Đăng nhập thành công", "", "success");
+        Swal.fire({
+          title: "Đăng nhập thành công",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
+          timer: 1500
+        })
         this.$router.push("/");
       } catch (error) {
         console.error("Error:", error);

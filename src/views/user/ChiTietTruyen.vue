@@ -156,7 +156,7 @@ export default {
   methods: {
     async getDetailStory() {
       try {
-        const reponse = await axios.get(`http://localhost:8000/api/home/${this.truyenId}`);
+        const reponse = await axios.get(`http://localhost:8000/api/story/${this.truyenId}`);
         console.log(reponse.data);
         this.detailTruyen = reponse.data;
       } catch (error) {

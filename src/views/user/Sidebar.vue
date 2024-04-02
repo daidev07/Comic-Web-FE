@@ -11,93 +11,26 @@
       <!-- End Dashboard Nav -->
 
       <li class="nav-item">
-        <a
-          class="nav-link"
-          data-bs-target="#components-nav"
-          data-bs-toggle="collapse"
-          href="#"
-        >
-          <i class="bi bi-menu-button-wide"></i><span>Thể loại</span
-          ><i class="bi bi-chevron-down ms-auto"></i>
+        <a class="nav-link" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-menu-button-wide"></i><span>Thể loại</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul
-          id="components-nav"
-          class="nav-content collapse"
-          data-bs-parent="#sidebar-nav"
-        >
-          <li>
-            <RouterLink
-              class="nav-link"
-              :to="{ path: '/theloaitruyen/hanhdong' }"
-            >
+        <ul id="components-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
+          <li v-for="category in categories" :key="category.id">
+            <RouterLink class="nav-link" :to="{ path: '/theloaitruyen/hanhdong' }">
               <i class="bi bi-circle"></i>
-              <span>Hành động</span>
+              <span>{{ category.ten }}</span>
             </RouterLink>
           </li>
-          <li>
-            <RouterLink
-              class="nav-link"
-              :to="{ path: '/theloaitruyen/xuyenkhong' }"
-            >
-              <i class="bi bi-circle"></i>
-              <span>Xuyên không</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              class="nav-link"
-              :to="{ path: '/theloaitruyen/hoiquy' }"
-            >
-              <i class="bi bi-circle"></i>
-              <span>Hồi quy</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              class="nav-link"
-              :to="{ path: '/theloaitruyen/kiemhiep' }"
-            >
-              <i class="bi bi-circle"></i>
-              <span>Kiếm hiệp</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              class="nav-link"
-              :to="{ path: '/theloaitruyen/tanthe' }"
-            >
-              <i class="bi bi-circle"></i>
-              <span>Tận thế</span>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink
-              class="nav-link"
-              :to="{ path: '/theloaitruyen/hiendai' }"
-            >
-              <i class="bi bi-circle"></i>
-              <span>Hiện đại</span>
-            </RouterLink>
-          </li>
+
         </ul>
       </li>
       <!-- End Thể loại -->
 
       <li class="nav-item">
-        <a
-          class="nav-link"
-          data-bs-target="#charts-nav"
-          data-bs-toggle="collapse"
-          href="#"
-        >
-          <i class="bi bi-bar-chart"></i><span>Top truyện</span
-          ><i class="bi bi-chevron-down ms-auto"></i>
+        <a class="nav-link" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
+          <i class="bi bi-bar-chart"></i><span>Top truyện</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
-        <ul
-          id="charts-nav"
-          class="nav-content collapse"
-          data-bs-parent="#sidebar-nav"
-        >
+        <ul id="charts-nav" class="nav-content collapse" data-bs-parent="#sidebar-nav">
           <li>
             <RouterLink class="nav-link" :to="{ path: '/toptruyen/topngay' }">
               <i class="bi bi-circle"></i>
@@ -140,9 +73,31 @@
   <!-- End Sidebar-->
 </template>
 <script>
+import axios from "axios";
+import swal from 'sweetalert2';
+
 export default {
   name: "SideBar",
+  data() {
+    return {
+      categories: [],
+    }
+  },
   components: {},
+  mounted() {
+    this.ShowCates();
+  },
+  methods: {
+    async ShowCates() {
+      try {
+        const reponse = await axios.get("http://localhost:8000/api/category");
+        this.categories = reponse.data;
+        console.log(2222, this.categories);
+      } catch (error) {
+        console.error("Error fetching categories data:", error);
+      }
+    },
+  }
 };
 </script>
 

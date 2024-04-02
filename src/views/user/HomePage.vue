@@ -102,7 +102,7 @@ export default {
   methods: {
     async ShowStories() {
       try {
-        const reponse = await axios.get("http://localhost:8000/api/home");
+        const reponse = await axios.get("http://localhost:8000/api/story");
         this.stories = reponse.data.reverse();
         console.log("DANH SÁCH TRUYỆN", this.stories);
       } catch (error) {
