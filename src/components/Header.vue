@@ -32,8 +32,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">4</span> </a
-          ><!-- End Notification Icon -->
+            <span class="badge bg-primary badge-number">4</span> </a><!-- End Notification Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
             <li class="dropdown-header">
@@ -106,8 +105,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
             <i class="bi bi-chat-left-text"></i>
-            <span class="badge bg-success badge-number">3</span> </a
-          ><!-- End Messages Icon -->
+            <span class="badge bg-success badge-number">3</span> </a><!-- End Messages Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow messages">
             <li class="dropdown-header">
@@ -266,11 +264,20 @@ export default {
       }).then((result) => {
         if (result.isConfirmed) {
           localStorage.removeItem("loggedInUser");
-          // Load lại trang
-          window.location.reload();
+          Swal.fire({
+            title: "Đăng xuất thành công",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK",
+            timer: 1500
+          }).then(() => {
+            // Sau khi Swal đã đóng, reload trang
+            window.location.reload();
+          });
         }
       });
-    },
+    }
+
   },
 
   mounted() {
