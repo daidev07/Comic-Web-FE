@@ -24,7 +24,7 @@
                                 <div class="col col-1 fw-bold text-center">Sửa</div>
                                 <div class="col col-1 fw-bold text-center">Xóa</div>
                             </li>
-                            <li class="table-row" v-for="story in stories" :key="stories.id">
+                            <li class="table-row" v-for="story in stories" :key="story.id">
                                 <div class="col col-3 text-center">
                                     <img :src="'data:image/jpeg;base64,' + story.avt" alt="Story Avatar"
                                         style="max-width: 100px; max-height: 50px;">
@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="col col-1 text-center" data-label="Customer Name">
                                     <button class="btn" style="background-color: #1e3a63; color: white"
-                                        data-bs-toggle="modal" data-bs-target="#modalUpdate">
+                                        data-bs-toggle="modal" data-bs-target="#modalUpdate" @click=updateStory(story)>
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
                                 </div>
@@ -83,9 +83,8 @@
                     <div class="mt-2 fw-bold">
                         Thể loại <span class="text-danger">*</span>
                     </div>
-                    <div class="form-check form-check-inline" v-for="category in categories" :key="categories.id">
-                        <input class="form-check-input" type="checkbox"
-                            @change="updateSelectedCategoryIds(category.id)" />
+                    <div class="form-check form-check-inline" v-for="category in categories" :key="category.id">
+                        <input class="form-check-input" type="checkbox" @change="addSelectedCategoryIds(category.id)" />
                         <label class="form-check-label">{{ category.ten }}</label>
                     </div>
                     <div class="mt-2 fw-bold">
@@ -97,7 +96,8 @@
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Hủy
                     </button>
-                    <button type="button" class="btn btn-primary" id="liveToastBtn" data-bs-dismiss="modal" @click="addStory">
+                    <button type="button" class="btn btn-primary" id="liveToastBtn" data-bs-dismiss="modal"
+                        @click="addStory">
                         Thêm
                     </button>
                 </div>
@@ -184,15 +184,15 @@
                     <div class="mt-2 fw-bold">
                         Tên truyện <span class="text-danger">*</span>
                     </div>
-                    <input type="text" class="form-control" v-model="newStory.ten" />
+                    <input type="text" class="form-control" v-model="updStory.ten" />
                     <div class="mt-2 fw-bold">
                         Tác giả <span class="text-danger">*</span>
                     </div>
-                    <input type="text" class="form-control" v-model="newStory.tacgia" />
+                    <input type="text" class="form-control" v-model="updStory.tacgia" />
                     <div class="mt-2 fw-bold">
                         Thể loại <span class="text-danger">*</span>
                     </div>
-                    <div class="form-check form-check-inline" v-for="category in categories" :key="categories.id">
+                    <div class="form-check form-check-inline" v-for="category in categories" :key="category.id">
                         <input class="form-check-input" type="checkbox"
                             @change="updateSelectedCategoryIds(category.id)" />
                         <label class="form-check-label">{{ category.ten }}</label>
@@ -200,13 +200,14 @@
                     <div class="mt-2 fw-bold">
                         Mô tả <span class="text-danger">*</span>
                     </div>
-                    <textarea class="form-control" v-model="newStory.gioithieu"></textarea>
+                    <textarea class="form-control" v-model="updStory.gioithieu"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Hủy
                     </button>
-                    <button type="button" class="btn btn-primary" id="liveToastBtn" @click="addStory">
+                    <button type="button" class="btn btn-primary" id="liveToastBtn" @click="confirmUpdate()"
+                        data-bs-dismiss="modal">
                         Chấp nhận
                     </button>
                 </div>
@@ -257,6 +258,15 @@ export default {
             },
             detailStory: null,
             selected: null,
+            updStory: {
+                id: null,
+                avt: null,
+                ten: null,
+                tacgia: null,
+                idTheLoais: [],
+                gioithieu: null
+            },
+            avtup: null
         };
     },
     components: { SideBar, Header },
@@ -280,13 +290,13 @@ export default {
             });
             // Sau khi promise hoàn thành, thực hiện phần gán
             loadFilePromise.then((base64String) => {
-                this.newStory.avt = base64String;
-                console.log(this.newStory.avt);
+                this.avtup = base64String;
             }).catch((error) => {
                 console.error("Đã xảy ra lỗi khi đọc file:", error);
             });
         },
-        updateSelectedCategoryIds(id) {
+
+        addSelectedCategoryIds(id) {
             const idIndex = this.newStory.idTheLoais.findIndex(
                 (categoryId) => categoryId === id
             );
@@ -297,10 +307,22 @@ export default {
             }
             console.log(this.newStory.idTheLoais);
         },
+        updateSelectedCategoryIds(id) {
+            const idIndex = this.newStory.idTheLoais.findIndex(
+                (categoryId) => categoryId === id
+            );
+            if (idIndex === -1) {
+                this.updStory.idTheLoais.push(id);
+            } else {
+                this.updStory.idTheLoais.splice(idIndex, 1);
+            }
+            console.log(this.updStory.idTheLoais);
+        },
         async ShowStories() {
             try {
-                const reponse = await axios.get("http://localhost:8000/api/home");
+                const reponse = await axios.get("http://localhost:8000/api/admin");
                 this.stories = reponse.data;
+                this.stories.reverse();
                 console.log("DANH SÁCH TRUYỆN", this.stories);
             } catch (error) {
                 console.error("Error fetching stories data:", error);
@@ -329,7 +351,8 @@ export default {
         },
         async addStory() {
             try {
-                const response = await axios.post("http://localhost:8000/api/home/add", this.newStory);
+                this.newStory.avt = this.avtup;
+                const response = await axios.post("http://localhost:8000/api/admin/add", this.newStory);
                 this.ShowStories();
                 console.log("Post add story", response.data);
                 swal.fire({
@@ -345,7 +368,7 @@ export default {
             this.detailStory = story
             console.log(this.detailStory);
             try {
-                const response = await axios.get(this.apiUrl + `/api/home/${story.id}/categories`);
+                const response = await axios.get(this.apiUrl + `/api/admin/${story.id}/categories`);
                 const categories = response.data;
                 const categoryNames = categories.map(category => category.ten);
                 this.detailStory.categoriesForStory = categoryNames;
@@ -354,8 +377,23 @@ export default {
                 console.error("Error taking categories for story:", error);
             }
         },
-        async updateStory() {
-
+        async updateStory(story) {
+            this.updStory = story
+            this.updStory.idTheLoais = []
+        },
+        async confirmUpdate() {
+            try {
+                this.updStory.avt = this.avtup;
+                await axios.put(`http://localhost:8000/api/admin/update/${this.updStory.id}`, this.updStory);
+                this.ShowStories();
+                swal.fire({
+                    title: "Đã cập nhật",
+                    text: "Đã cập nhật truyện thành công!",
+                    icon: "success"
+                });
+            } catch (error) {
+                console.error("Error taking update story:", error);
+            }
         },
         deleteStory(strId) {
             this.selected = this.stories.find(story => story.id === strId)
@@ -370,7 +408,7 @@ export default {
                 cancelButtonColor: "#d33",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(this.apiUrl + `/api/home/remove/${deleteStoryId}`)
+                    axios.delete(this.apiUrl + `/api/admin/remove/${deleteStoryId}`)
                         .then(response => {
                             swal.fire({
                                 title: "Đã xóa",
