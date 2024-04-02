@@ -24,7 +24,9 @@
                 </div>
 
                 <!-- Submit button -->
-                <button type="button" class="btn btn-primary col-4 mb-4" @click="loginUser">Đăng nhập</button>
+                <div class="">
+                  <button type="button" class="btn btn-primary col-4 mb-4" @click="loginUser()">Đăng nhập</button> <RouterLink :to="{ path: '/' }"><button type="button" class="btn btn-danger col-4 mb-4">Trang chủ</button></RouterLink>
+                </div>
 
                 <div class="text-center">
                   <p>
@@ -87,20 +89,16 @@ export default {
         // Gửi yêu cầu POST để tìm kiếm người dùng theo username
         const response = await axios.post(`${apiUrl}/api/user/login`, this.userCheck);
         const userFromApi = response.data;
-
-        // Kiểm tra xem người dùng đã được tìm thấy hay không
-        if (userFromApi) {
-          // Nếu người dùng tồn tại, tiến hành đăng nhập
-          Swal.fire("Đăng nhập thành công", "", "success");
-          this.$router.push("/");
-        } else {
-          // Nếu người dùng không tồn tại, hiển thị thông báo lỗi hoặc thực hiện các thao tác khác
-          Swal.fire("Tên đăng nhập hoặc mật khẩu không hợp lệ!", "Vui lòng kiểm tra lại!", "error");
-          console.log("Tên đăng nhập không tồn tại");
-          return;
-        }
+        // Nếu người dùng tồn tại, tiến hành đăng nhập
+        localStorage.setItem("loggedInUser", JSON.stringify(userFromApi));
+        Swal.fire("Đăng nhập thành công", "", "success");
+        this.$router.push("/");
       } catch (error) {
         console.error("Error:", error);
+        // Nếu người dùng không tồn tại, hiển thị thông báo lỗi hoặc thực hiện các thao tác khác
+        Swal.fire("Tên đăng nhập hoặc mật khẩu không hợp lệ!", "Vui lòng kiểm tra lại!", "error");
+        console.log("Tên đăng nhập không tồn tại");
+        return;
       }
     },
   },

@@ -168,16 +168,16 @@
         </li>
         <!-- End Messages Nav -->
 
-        <!-- <li class="nav-item dropdown pe-3">
+        <li class="nav-item dropdown pe-3 profileUser" v-if="isLoggedIn">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" />
-            <span class="d-none d-md-block dropdown-toggle ps-2">Admin</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2">{{ this.currentUser.hoten }}</span>
           </a>
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile" style="z-index: 999">
             <li class="dropdown-header">
-              <h6>Admin</h6>
-              <span>Web Designer</span>
+              <h6>{{ this.currentUser.username }}</h6>
+              <span>{{ this.currentUser.email }}</span>
             </li>
             <li>
               <hr class="dropdown-divider" />
@@ -216,14 +216,14 @@
             <li>
               <a class="dropdown-item d-flex align-items-center" href="#">
                 <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
+                <span @click="logoutClick()">Sign Out</span>
               </a>
             </li>
           </ul>
-        </li> -->
+        </li>
         <!-- End Profile Nav -->
 
-        <li class="me-4">
+        <li class="me-4 dangnhap" v-if="!isLoggedIn">
           <RouterLink :to="{ path: '/login' }">
             <button type="button" class="btn btn-outline-primary me-2" style="height: 100%">Đăng nhập</button>
           </RouterLink>
@@ -235,8 +235,52 @@
   <!-- End Header -->
 </template>
 <script>
+import Swal from "sweetalert2";
 export default {
   name: "Header",
   components: {},
+  data() {
+    return {
+      currentUser: {
+        id: "",
+        hoten: "",
+        email: "",
+        username: "",
+        password: "",
+        is_admin: "",
+        avt: null,
+      },
+      isLoggedIn: false,
+    };
+  },
+  methods: {
+    logoutClick() {
+      Swal.fire({
+        title: "Bạn có chắc chắn muốn đăng xuất?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Có",
+        cancelButtonText: "Không",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem("loggedInUser");
+          // Load lại trang
+          window.location.reload();
+        }
+      });
+    },
+  },
+
+  mounted() {
+    // Check xem có thông tin đăng nhập trong Local Storage không
+    this.currentUser = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (this.currentUser) {
+      this.isLoggedIn = true;
+    } else {
+      this.isLoggedIn = false;
+    }
+  },
 };
 </script>

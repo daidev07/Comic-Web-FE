@@ -11,12 +11,12 @@
         <div class="card mb-3">
           <div class="row g-0">
             <div class="col-md-4">
-              <img src="assets/img/card.jpg" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 100%; height: 600px" />
+              <img :src="'data:image/jpeg;base64,' + detailTruyen.avt" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 100%; height: 600px" />
             </div>
             <div class="col-md-8">
               <div class="card-body ms-3">
-                <h1 class="card-title fw-bold fs-1">Kiếm Đế Nguyệt Linh</h1>
-                <h1 class="card-title fw-bold">Tác giả: Stroyplus Studio</h1>
+                <h1 class="card-title fw-bold fs-1">{{ detailTruyen.ten }}</h1>
+                <h1 class="card-title fw-bold">Tác giả: {{ detailTruyen.tacgia }}</h1>
                 <h1 class="card-title fw-bold">Trạng thái: Đang thực hiện</h1>
                 <h1 class="card-title fw-bold">Chap mới nhất: 80</h1>
                 <h1 class="card-title fw-bold">Lịch cập nhật: 21h thứ 4 hàng tuần</h1>
@@ -49,7 +49,7 @@
         </div>
         <!-- Mô tả nội dung -->
         <div class="card p-2">
-          <h5>Manga "tâm lý hồi hộp" kể về Godai, một cảnh sát bị loại khỏi bộ phận điều tra của cảnh sát do bạo lực đối với tội phạm. Anh hợp tác với Hidaka, một người đàn ông tự xưng là "cảnh sát điều tra hiện tượng huyền bí" với tuyên bố có khả năng cử Godai về quá khứ để ngăn chặn tất cả những tội ác khủng khiếp đã xảy ra, liệu điều đó có thể xảy ra không và hậu quả sẽ ra sao?</h5>
+          <h5>{{ detailTruyen.gioithieu }}</h5>
         </div>
         <!-- End Mô tả nội dung -->
         <div class="pagetitle" style="margin-top: -18px">
@@ -136,9 +136,40 @@
 <script>
 import SideBar from "./Sidebar.vue";
 import Header from "../../components/Header.vue";
+import axios from "axios";
 export default {
   name: "ChiTietTruyen",
   components: { SideBar, Header },
+  data() {
+    return {
+      truyenId: null,
+      detailTruyen: {
+        id: null,
+        avt: null,
+        ten: null,
+        tacgia: null,
+        gioithieu: null,
+        view: null,
+      },
+    };
+  },
+  methods: {
+    async getDetailStory() {
+      try {
+        const reponse = await axios.get(`http://localhost:8000/api/home/${this.truyenId}`);
+        console.log(reponse.data);
+        this.detailTruyen = reponse.data;
+      } catch (error) {
+        console.error("Error fetching stories data:", error);
+      }
+    },
+  },
+  mounted() {
+    this.truyenId = this.$route.params.id;
+    console.log(this.truyenId); // In ra giá trị của userId
+    this.getDetailStory(this.truyenId);
+    this.getDetailStory();
+  },
 };
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
