@@ -129,21 +129,21 @@
                         <div class="col-4 fw-bold">
                             Tên truyện:
                         </div>
-                        <div class="col-9">{{ detailStory ? detailStory.ten : '' }}</div>
+                        <div class="col-8">{{ detailStory ? detailStory.ten : '' }}</div>
                     </div>
 
                     <div class="d-flex mt-3">
                         <div class="col-4 fw-bold">
                             Tác giả:
                         </div>
-                        <div class="col-9">{{ detailStory ? detailStory.tacgia : '' }}</div>
+                        <div class="col-8">{{ detailStory ? detailStory.tacgia : '' }}</div>
                     </div>
 
                     <div class="d-flex mt-3">
                         <div class="col-4 fw-bold">
                             Thể loại:
                         </div>
-                        <div class="col-9">
+                        <div class="col-8">
                             {{ detailStory && detailStory.categoriesForStory ? detailStory.categoriesForStory.join(', ')
                                 : '' }}
                         </div>
@@ -153,7 +153,7 @@
                         <div class="col-4 fw-bold">
                             Mô tả:
                         </div>
-                        <div class="col-9">{{ detailStory ? detailStory.gioithieu : '' }}</div>
+                        <div class="col-8">{{ detailStory ? detailStory.gioithieu : '' }}</div>
                     </div>
                     <!-- <div class="d-flex mt-3">
                         <div class="col-4 fw-bold">
@@ -330,7 +330,7 @@ export default {
         },
         async ShowStories() {
             try {
-                const reponse = await axios.get("http://localhost:8000/api/admin");
+                const reponse = await axios.get("http://localhost:8000/api/story");
                 this.stories = reponse.data;
                 this.stories.reverse();
                 console.log("DANH SÁCH TRUYỆN", this.stories);
@@ -362,7 +362,7 @@ export default {
         async addStory() {
             try {
                 this.newStory.avt = this.avtup;
-                const response = await axios.post("http://localhost:8000/api/admin/add", this.newStory);
+                const response = await axios.post("http://localhost:8000/api/story/add", this.newStory);
                 this.ShowStories();
                 console.log("Post add story", response.data);
                 swal.fire({
@@ -385,7 +385,7 @@ export default {
             this.detailStory = story
             console.log(this.detailStory);
             try {
-                const response = await axios.get(this.apiUrl + `/api/admin/${story.id}/categories`);
+                const response = await axios.get(this.apiUrl + `/api/story/${story.id}/categories`);
                 const categories = response.data;
                 const categoryNames = categories.map(category => category.ten);
                 this.detailStory.categoriesForStory = categoryNames;
@@ -401,7 +401,7 @@ export default {
         async confirmUpdate() {
             try {
                 this.updStory.avt = this.avtup;
-                await axios.put(`http://localhost:8000/api/admin/update/${this.updStory.id}`, this.updStory);
+                await axios.put(`http://localhost:8000/api/story/update/${this.updStory.id}`, this.updStory);
                 this.ShowStories();
                 swal.fire({
                     title: "Đã cập nhật",
@@ -433,7 +433,7 @@ export default {
                 cancelButtonColor: "#d33",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    axios.delete(this.apiUrl + `/api/admin/remove/${deleteStoryId}`)
+                    axios.delete(this.apiUrl + `/api/story/remove/${deleteStoryId}`)
                         .then(response => {
                             swal.fire({
                                 title: "Đã xóa",
