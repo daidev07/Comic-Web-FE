@@ -24,32 +24,36 @@
                                 <div class="col col-1 fw-bold text-center">Sửa</div>
                                 <div class="col col-1 fw-bold text-center">Xóa</div>
                             </li>
-                            <li class="table-row" v-for="story in stories" :key="story.id">
-                                <div class="col col-3 text-center">
-                                    <img :src="'data:image/jpeg;base64,' + story.avt" alt="Story Avatar"
-                                        style="max-width: 100px; max-height: 50px;">
-                                </div>
+                            <div style="max-height: 800px;" class="overflow-auto">
+                                <li class="table-row" v-for="story in stories" :key="story.id">
+                                    <div class="col col-3 text-center">
+                                        <img :src="`${this.apiUrl}/${story.avt}`" alt="Story Avatar"
+                                            style="max-width: 100px; max-height: 50px;">
+                                    </div>
 
-                                <div class="col col-2 h5">{{ story.ten }}</div>
-                                <div class="col col-1 text-center" data-label="Customer Name">
-                                    <button class="btn" style="background-color: #1e3a63; color: white"
-                                        data-bs-toggle="modal" data-bs-target="#modalInfo" @click=takeStory(story)>
-                                        <i class="bi bi-info-circle"></i>
-                                    </button>
-                                </div>
-                                <div class="col col-1 text-center" data-label="Customer Name">
-                                    <button class="btn" style="background-color: #1e3a63; color: white"
-                                        data-bs-toggle="modal" data-bs-target="#modalUpdate" @click=updateStory(story)>
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                </div>
-                                <div class="col col-1 text-center" data-label="Amount">
-                                    <button class="btn" style="background-color: #1e3a63; color: white"
-                                        @click=deleteStory(story.id)>
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                </div>
-                            </li>
+                                    <div class="col col-2 h5">{{ story.ten }}</div>
+                                    <div class="col col-1 text-center" data-label="Customer Name">
+                                        <button class="btn" style="background-color: #1e3a63; color: white"
+                                            data-bs-toggle="modal" data-bs-target="#modalInfo" @click=takeStory(story)>
+                                            <i class="bi bi-info-circle"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col col-1 text-center" data-label="Customer Name">
+                                        <button class="btn" style="background-color: #1e3a63; color: white"
+                                            data-bs-toggle="modal" data-bs-target="#modalUpdate"
+                                            @click=updateStory(story)>
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                    </div>
+                                    <div class="col col-1 text-center" data-label="Amount">
+                                        <button class="btn" style="background-color: #1e3a63; color: white"
+                                            @click=deleteStory(story.id)>
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </div>
+
                         </ul>
                     </div>
                 </div>
@@ -121,7 +125,7 @@
                         Ảnh truyện
                     </div>
                     <div class="text-center mb-3">
-                        <img v-if="detailStory && detailStory.avt" :src="'data:image/jpeg;base64,' + detailStory.avt"
+                        <img v-if="detailStory && detailStory.avt" :src="`${this.apiUrl}/${detailStory.avt}`"
                             alt="Story Avatar" style="max-width: 400px; max-height: 150px;" class="mx-auto">
                     </div>
 
@@ -145,7 +149,7 @@
                         </div>
                         <div class="col-8">
                             {{ detailStory && detailStory.categoriesForStory ? detailStory.categoriesForStory.join(', ')
-                                : '' }}
+                                    : '' }}
                         </div>
                     </div>
 
@@ -286,26 +290,8 @@ export default {
     },
     methods: {
         uploadFile(e) {
-            const file = e.target.files[0];
-            let reader = new FileReader();
-            // Tạo một promise mới
-            const loadFilePromise = new Promise((resolve, reject) => {
-                reader.onload = (e) => {
-                    const imageData = e.target.result;
-                    // Mã hóa imageData thành Base64
-                    const base64String = imageData.split(",")[1];
-                    resolve(base64String); // Gửi Base64 qua cho hàm then
-                };
-                reader.readAsDataURL(file);
-            });
-            // Sau khi promise hoàn thành, thực hiện phần gán
-            loadFilePromise.then((base64String) => {
-                this.avtup = base64String;
-            }).catch((error) => {
-                console.error("Đã xảy ra lỗi khi đọc file:", error);
-            });
+            this.avtup = e.target.files[0];
         },
-
         addSelectedCategoryIds(id) {
             const idIndex = this.newStory.idTheLoais.findIndex(
                 (categoryId) => categoryId === id
@@ -361,8 +347,19 @@ export default {
         },
         async addStory() {
             try {
-                this.newStory.avt = this.avtup;
-                const response = await axios.post("http://localhost:8000/api/story/add", this.newStory);
+                const formData = new FormData();
+                formData.append('avtFile', this.avtup);
+                formData.append('ten', this.newStory.ten);
+                formData.append('tacgia', this.newStory.tacgia);
+                formData.append('gioithieu', this.newStory.gioithieu);
+                formData.append('idTheLoais', this.newStory.idTheLoais);
+
+                const response = await axios.post("http://localhost:8000/api/story/add", formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
                 this.ShowStories();
                 console.log("Post add story", response.data);
                 swal.fire({
@@ -370,6 +367,7 @@ export default {
                     text: "Đã thêm truyện mới thành công",
                     icon: "success"
                 });
+
                 this.newStory = {
                     avt: null,
                     ten: null,
@@ -377,6 +375,8 @@ export default {
                     idTheLoais: [],
                     gioithieu: null
                 };
+                this.selected = null;
+
             } catch (error) {
                 console.error("Error adding story:", error);
             }
@@ -400,8 +400,18 @@ export default {
         },
         async confirmUpdate() {
             try {
-                this.updStory.avt = this.avtup;
-                await axios.put(`http://localhost:8000/api/story/update/${this.updStory.id}`, this.updStory);
+                const formData = new FormData();
+                formData.append('avtFile', this.avtup);
+                formData.append('ten', this.updStory.ten);
+                formData.append('tacgia', this.updStory.tacgia);
+                formData.append('gioithieu', this.updStory.gioithieu);
+                formData.append('idTheLoais', this.updStory.idTheLoais);
+
+                await axios.put(`http://localhost:8000/api/story/update/${this.updStory.id}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
                 this.ShowStories();
                 swal.fire({
                     title: "Đã cập nhật",
