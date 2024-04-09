@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/components/Login.vue";
 import HomePage from "@/views/user/HomePage.vue";
 import Dashboard from "@/views/admin/Dashboard.vue";
+import ChapterForStory from "@/views/admin/ChapterForStory.vue";
 import Register from "@/components/Register.vue";
 import TheLoai from "@/views/admin/TheLoai.vue";
 import User from "@/views/admin/User.vue";
@@ -42,11 +43,8 @@ const routes = [
         name: "theloai",
         component: TheLoai,
       },
-      {
-        path: "user",
-        name: "user",
-        component: User,
-      },
+      { path: "user", name: "user", component: User },
+      { path: "chi-tiet/:id", name: "chi-tiet", component: ChapterForStory },
     ],
   },
   {
