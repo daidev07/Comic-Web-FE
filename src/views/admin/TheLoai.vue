@@ -133,7 +133,7 @@ export default {
                 this.ShowCates();
                 swal.fire({
                     title: "Đã thêm",
-                    text: "Đã thêm truyện mới thành công",
+                    text: "Đã thêm truyện thể loại thành công",
                     icon: "success"
                 });
                 this.newCate.ten = null
@@ -159,7 +159,7 @@ export default {
                         .then(response => {
                             swal.fire({
                                 title: "Đã xóa",
-                                text: "Bạn đã xóa truyện thành công",
+                                text: "Bạn đã xóa thể loại thành công",
                                 icon: "success"
                             });
                             this.ShowCates();
@@ -167,7 +167,7 @@ export default {
                         .catch(error => {
                             swal.fire({
                                 title: "Lỗi",
-                                text: "Có lỗi xảy ra khi xóa truyện",
+                                text: "Có lỗi xảy ra khi xóa thể loại",
                                 icon: "error"
                             });
                             console.error(error);
