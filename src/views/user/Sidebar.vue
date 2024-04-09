@@ -89,7 +89,6 @@ export default {
       try {
         const reponse = await axios.get("http://localhost:8000/api/category");
         this.categories = reponse.data;
-        console.log(2222, this.categories);
       } catch (error) {
         console.error("Error fetching categories data:", error);
       }

@@ -33,10 +33,10 @@
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="d-flex gap-2">
-                  <RouterLink :to="{ path: '/reading' }">
+                  <RouterLink :to="{ path: '/doc-truyen' }">
                     <button type="button" class="btn btn-danger">Đọc từ đầu</button>
                   </RouterLink>
-                  <RouterLink :to="{ path: '/reading' }">
+                  <RouterLink :to="{ path: '/doc-truyen' }">
                     <button type="button" class="btn btn-primary">Đọc tiếp chương 80</button>
                   </RouterLink>
                 </div>
@@ -62,67 +62,23 @@
           <table class="table">
             <thead>
               <tr class="fs-4">
-                <th class="fw-bold" scope="col">Số chương</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th class="fw-bold" scope="col">Cập nhật</th>
-                <th class="fw-bold" scope="col">Lượt xem</th>
+                <th class="fw-bold" scope="col">Tên chương</th>
+                <th class="fw-bold col-2 text-center" scope="col">Trạng thái</th>
+                <th class="fw-bold col-2 text-center" scope="col">Cập nhật</th>
+                <th class="fw-bold col-2 text-center" scope="col">Lượt xem</th>
               </tr>
             </thead>
             <tbody>
-              <tr class="fs-6">
-                <th scope="row">Chapter 04</th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <td>16 phút trước</td>
-                <td>1.234</td>
-              </tr>
-              <tr class="fs-6">
-                <th scope="row">Chapter 03</th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <td>16 phút trước</td>
-                <td>1.234</td>
-              </tr>
-              <tr class="fs-6">
-                <th scope="row">Chapter 02</th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <td>16 phút trước</td>
-                <td>1.234</td>
-              </tr>
-              <tr class="fs-6">
-                <th scope="row">Chapter 01</th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <td>16 phút trước</td>
-                <td>1.234</td>
-              </tr>
+                <tr class="fs-8"  v-for="chapter in chapters" :key=chapter?.id>
+                  <td class="fw-bold" scope="row" style="font-size: 18px">
+                    <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }">
+                      Chapter {{ chapter.so}}: {{ chapter.ten }} 
+                    </RouterLink>
+                  </td>
+                  <td class="col-2 text-center" ><i class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
+                  <td class="col-2 text-center" >16 phút trước</td>
+                  <td class="col-2 text-center">1.234</td>
+                </tr>
             </tbody>
           </table>
           <!-- End Default Table Example -->
@@ -154,6 +110,9 @@
     </main>
     <!-- End #main -->
   </div>
+
+<!-- TOAST -->
+
 </template>
 
 <script>
@@ -197,7 +156,18 @@ export default {
       },
       currentUser: null,
       isFavorite: false,
+      chapters: [],
     };
+  },
+  mounted() {
+    this.truyenId = this.$route.params.id;
+    this.currentUser = JSON.parse(window.localStorage.getItem("loggedInUser"));
+    console.log(this.truyenId); // In ra giá trị của userId
+    this.getDetailStory(this.truyenId);
+    this.getDetailStory();
+    this.checkFavorite();
+    this.getAllCommentsByStoryId();
+    this.fetchChapters();
   },
   methods: {
     async getDetailStory() {
@@ -205,14 +175,13 @@ export default {
         let response = await axios.get(`http://localhost:8000/api/story/${this.truyenId}`);
         console.log(response.data);
         this.detailTruyen = response.data;
-
         response = await axios.get(`http://localhost:8000/api/story/${this.truyenId}/categories`);
         const categories = response.data;
         const categoryNames = categories.map((category) => category.ten);
         this.detailTruyen.categories = categoryNames;
-        console.log("Truyện có id là ", this.detailStory.id + " có thể loại: " + categoryNames);
+        console.log("Truyện có id là ", this.detailTruyen.id + " có thể loại: " + categoryNames);
       } catch (error) {
-        console.error("Error fetching stories data:", error);
+        console.error("Error fetching getDetailStory data:", error);
       }
     },
     async postFavorite() {
@@ -236,12 +205,12 @@ export default {
     async checkFavorite() {
       try {
         const response = await axios.get(`http://localhost:8000/api/favorite/${this.currentUser.id}/${this.truyenId}`);
-        const data = response.data;
-        if (data) {
+        const data2 = response.data;
+        if (data2) {
           this.isFavorite = true;
         }
       } catch (error) {
-        console.error("Error fetching stories data:", error);
+        console.error("Error fetching favorites data:", error);
       }
     },
     async deleteFavorite() {
@@ -303,16 +272,20 @@ export default {
     formatDateFromNow(date) {
       return formatDistanceToNow(new Date(date), { locale: viLocale, addSuffix: true });
     },
+    async fetchChapters() {
+      try {
+        const reponse = await axios.get(
+          this.apiUrl + `/api/chapter/${this.truyenId}`
+        );
+        this.chapters = reponse.data;
+        console.log("DANH SÁCH CHƯƠNG", this.chapters);
+        this.chapters.reverse();
+      } catch (error) {
+        console.error("Error fetching chapters data:", error);
+      }
+    },
   },
-  mounted() {
-    this.truyenId = this.$route.params.id;
-    this.currentUser = JSON.parse(window.localStorage.getItem("loggedInUser"));
-    console.log(this.truyenId); // In ra giá trị của userId
-    this.getDetailStory(this.truyenId);
-    this.getDetailStory();
-    this.checkFavorite();
-    this.getAllCommentsByStoryId();
-  },
+
 };
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

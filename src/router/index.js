@@ -86,13 +86,20 @@ const routes = [
   {
     path: "/chitiet/:id",
     name: "chitiet",
-    component: ChiTietTruyen,
+    children: [
+      { 
+        path: "",
+        name: "chitiet",
+        component: ChiTietTruyen,
+      },
+      { 
+        path: "doc-truyen/:chapterId",
+        name: "reading",
+        component: Reading,
+      }
+    ]
   },
-  {
-    path: "/reading",
-    name: "reading",
-    component: Reading,
-  },
+
 ];
 
 const router = createRouter({
