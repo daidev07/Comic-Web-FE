@@ -50,40 +50,9 @@ const routes = [
     ],
   },
   {
-    path: "/theloaitruyen",
+    path: "/theloaitruyen/:id",
     name: "theloaitruyen",
-    children: [
-      {
-        path: "hanhdong",
-        name: "hanhdong",
-        component: TheLoaiTruyen,
-      },
-      {
-        path: "xuyenkhong",
-        name: "xuyenkhong",
-        component: TheLoaiTruyen,
-      },
-      {
-        path: "hoiquy",
-        name: "hoiquy",
-        component: TheLoaiTruyen,
-      },
-      {
-        path: "kiemhiep",
-        name: "kiemhiep",
-        component: TheLoaiTruyen,
-      },
-      {
-        path: "tanthe",
-        name: "tanthe",
-        component: TheLoaiTruyen,
-      },
-      {
-        path: "hiendai",
-        name: "hiendai",
-        component: TheLoaiTruyen,
-      },
-    ],
+    component: TheLoaiTruyen,
   },
   {
     path: "/toptruyen",
