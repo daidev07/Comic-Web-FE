@@ -60,7 +60,6 @@
                                     </div>
                                 </li>
                             </div>
-
                         </ul>
                     </div>
                 </div>
@@ -68,108 +67,7 @@
         </main>
         <!-- End #main -->
     </div>
-
-    <!-- Modal thêm -->
-    <div class="modal fade" id="modalThem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header justify-content-center">
-                    <h5 class="modal-title fw-bold" id="staticBackdropLabel">Thêm truyện mới</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="fw-bold">
-                        Ảnh đại diện truyện <span class="text-danger">*</span>
-                    </div>
-                    <input type="file" class="form-control" @change="uploadFile" />
-                    <div class="mt-2 fw-bold">
-                        Tên truyện <span class="text-danger">*</span>
-                    </div>
-                    <input type="text" class="form-control" v-model="newStory.ten" />
-                    <div class="mt-2 fw-bold">
-                        Tác giả <span class="text-danger">*</span>
-                    </div>
-                    <input type="text" class="form-control" v-model="newStory.tacgia" />
-                    <div class="mt-2 fw-bold">
-                        Thể loại <span class="text-danger">*</span>
-                    </div>
-                    <div class="form-check form-check-inline" v-for="category in categories" :key="category.id">
-                        <input class="form-check-input" type="checkbox" @change="addSelectedCategoryIds(category.id)" />
-                        <label class="form-check-label">{{ category.ten }}</label>
-                    </div>
-                    <div class="mt-2 fw-bold">
-                        Mô tả <span class="text-danger">*</span>
-                    </div>
-                    <textarea class="form-control" v-model="newStory.gioithieu"></textarea>
-                    <!-- <div class="mt-2 fw-bold">
-                        Chương: <span class="text-danger">*</span>
-                    </div> -->
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Hủy
-                    </button>
-                    <button type="button" class="btn btn-primary" id="liveToastBtn" data-bs-dismiss="modal"
-                        @click="addStory">
-                        Thêm
-                    </button>
-                </div>
-            </div>
-        </div>
-      </div>
-      <div class="d-flex mt-3">
-        <div class="">
-          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalThem">Thêm truyện</button>
-        </div>
-        <div class="w-75">
-          <div class="container">
-            <ul class="responsive-table">
-              <li class="table-header">
-                <div class="col col-3 fw-bold text-center">Ảnh</div>
-                <div class="col col-2 fw-bold">Tên truyện</div>
-                <div class="col col-3 fw-bold text-center me-3">Chương</div>
-                <div class="col col-1 fw-bold text-center me-5">Xem</div>
-                <div class="col col-1 fw-bold text-center me-5">Sửa</div>
-                <div class="col col-1 fw-bold text-center me-5">Xóa</div>
-              </li>
-              <div style="max-height: 650px" class="overflow-auto">
-                <li class="table-row" v-for="story in stories" :key="story.id">
-                  <div class="col col-3 text-center">
-                    <img :src="`${this.apiUrl}/${story.avt}`" alt="Story Avatar" style="max-width: 100px; max-height: 50px" />
-                  </div>
-                  <div class="col col-2 h5">{{ story.ten }}</div>
-                  <div class="col col-3 text-center" data-label="Customer Name">
-                    <RouterLink :to="{ path: `/admin/chi-tiet/${story.id}` }" class="image-link">
-                      <button class="btn" style="background-color: #1e3a63; color: white">
-                        <i class="bi bi-info-circle"></i>
-                      </button>
-                    </RouterLink>
-                  </div>
-                  <div class="col col-1 text-center me-3" data-label="Customer Name">
-                    <button class="btn" style="background-color: #1e3a63; color: white" data-bs-toggle="modal" data-bs-target="#modalInfo" @click="takeStory(story)">
-                      <i class="bi bi-info-circle"></i>
-                    </button>
-                  </div>
-                  <div class="col col-1 text-center me-3" data-label="Customer Name">
-                    <button class="btn" style="background-color: #1e3a63; color: white" data-bs-toggle="modal" data-bs-target="#modalUpdate" @click="updateStory(story)">
-                      <i class="bi bi-pencil-square"></i>
-                    </button>
-                  </div>
-                  <div class="col col-1 text-center me-3" data-label="Amount">
-                    <button class="btn" style="background-color: #1e3a63; color: white" @click="deleteStory(story.id)">
-                      <i class="bi bi-trash3"></i>
-                    </button>
-                  </div>
-                </li>
-              </div>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </main>
     <!-- End #main -->
-  </div>
 
   <!-- Modal thêm -->
   <div class="modal fade" id="modalThem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -192,13 +90,10 @@
           </div>
           <div class="mt-2 fw-bold">Mô tả <span class="text-danger">*</span></div>
           <textarea class="form-control" v-model="newStory.gioithieu"></textarea>
-          <!-- <div class="mt-2 fw-bold">
-                      Chương: <span class="text-danger">*</span>
-                  </div> -->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <button type="button" class="btn btn-primary" id="liveToastBtn" data-bs-dismiss="modal" @click="addStory">Thêm</button>
+          <button type="button" class="btn btn-primary" id="liveToastBtn" data-bs-dismiss="modal" @click="addStory()">Thêm</button>
         </div>
       </div>
     </div>
@@ -238,12 +133,6 @@
             <div class="col-4 fw-bold">Mô tả:</div>
             <div class="col-8">{{ detailStory ? detailStory.gioithieu : "" }}</div>
           </div>
-          <!-- <div class="d-flex mt-3">
-                      <div class="col-4 fw-bold">
-                          Chương:
-                      </div>
-                      <div class="col-9"></div>
-                  </div> -->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -308,42 +197,33 @@ import 'vue3-toastify/dist/index.css'
 import { RouterLink } from "vue-router";
 
 export default {
-  name: "HomePage",
-  data() {
-    return {
-      apiUrl: process.env.VUE_APP_URL,
-      stories: [],
-      categories: [],
-      categoriesForStory: [],
-      cateOptions: [],
-      newStory: {
-        avt: null,
-        ten: null,
-        tacgia: null,
-        idTheLoais: [],
-        gioithieu: null,
-      },
-      detailStory: null,
-      selected: null,
-      updStory: {
-        id: null,
-        avt: null,
-        ten: null,
-        tacgia: null,
-        idTheLoais: [],
-        gioithieu: null,
-      },
-      avtup: null,
-    };
-  },
-  components: { SideBar, Header, RouterLink },
-  mounted() {
-    this.ShowStories();
-    this.ShowCate();
-  },
-  methods: {
-    uploadFile(e) {
-      this.avtup = e.target.files[0];
+    name: "HomePage",
+    data() {
+        return {
+            apiUrl: process.env.VUE_APP_URL,
+            stories: [],
+            categories: [],
+            categoriesForStory: [],
+            cateOptions: [],
+            newStory: {
+                avt: null,
+                ten: null,
+                tacgia: null,
+                idTheLoais: [],
+                gioithieu: null,
+            },
+            detailStory: null,
+            selected: null,
+            updStory: {
+                id: null,
+                avt: null,
+                ten: null,
+                tacgia: null,
+                idTheLoais: [],
+                gioithieu: null,
+            },
+            avtup: null,
+        };
     },
     components: { SideBar, Header, RouterLink },
     mounted() {
@@ -526,136 +406,6 @@ export default {
             });
         },
     },
-    async ShowCate() {
-      try {
-        //console.log(2222, this.categories);
-        const reponse = await axios.get("http://localhost:8000/api/category");
-        this.categories = reponse.data;
-      } catch (error) {
-        console.error("Error fetching categories data:", error);
-      }
-    },
-    async addStory() {
-      try {
-        const formData = new FormData();
-        formData.append("avtFile", this.avtup);
-        formData.append("ten", this.newStory.ten);
-        formData.append("tacgia", this.newStory.tacgia);
-        formData.append("gioithieu", this.newStory.gioithieu);
-        formData.append("idTheLoais", this.newStory.idTheLoais);
-        console.log("Dữ liệu form data:: ", formData);
-        const response = await axios.post("http://localhost:8000/api/story/add", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        this.ShowStories();
-        console.log("Post add story", response.data);
-        swal.fire({
-          title: "Đã thêm",
-          text: "Đã thêm truyện mới thành công",
-          icon: "success",
-        });
-
-        this.newStory = {
-          avt: null,
-          ten: null,
-          tacgia: null,
-          idTheLoais: [],
-          gioithieu: null,
-        };
-        this.selected = null;
-      } catch (error) {
-        console.error("Error adding story:", error);
-      }
-    },
-    async takeStory(story) {
-      this.detailStory = story;
-      console.log(this.detailStory);
-      try {
-        const response = await axios.get(this.apiUrl + `/api/story/${story.id}/categories`);
-        const categories = response.data;
-        const categoryNames = categories.map((category) => category.ten);
-        this.detailStory.categoriesForStory = categoryNames;
-        console.log("Truyện có id là ", this.detailStory.id + " có thể loại: " + categoryNames);
-      } catch (error) {
-        console.error("Error taking categories for story:", error);
-      }
-    },
-    async updateStory(story) {
-      this.updStory = story;
-      this.updStory.idTheLoais = [];
-    },
-    async confirmUpdate() {
-      try {
-        const formData = new FormData();
-        formData.append("avtFile", this.avtup);
-        formData.append("ten", this.updStory.ten);
-        formData.append("tacgia", this.updStory.tacgia);
-        formData.append("gioithieu", this.updStory.gioithieu);
-        formData.append("idTheLoais", this.updStory.idTheLoais);
-
-        await axios.put(`http://localhost:8000/api/story/update/${this.updStory.id}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        this.ShowStories();
-        swal.fire({
-          title: "Đã cập nhật",
-          text: "Đã cập nhật truyện thành công!",
-          icon: "success",
-        });
-        this.updStory = {
-          id: null,
-          avt: null,
-          ten: null,
-          tacgia: null,
-          idTheLoais: [],
-          gioithieu: null,
-        };
-      } catch (error) {
-        console.error("Error taking update story:", error);
-      }
-    },
-    deleteStory(strId) {
-      this.selected = this.stories.find((story) => story.id === strId);
-      const deleteStoryId = this.selected.id;
-      swal
-        .fire({
-          title: "Bạn muốn xóa?",
-          text: "Bạn có chắc chắn muốn xóa truyện không?",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Có, hãy xóa",
-          cancelButtonColor: "#d33",
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            axios
-              .delete(this.apiUrl + `/api/story/remove/${deleteStoryId}`)
-              .then((response) => {
-                swal.fire({
-                  title: "Đã xóa",
-                  text: "Bạn đã xóa truyện thành công",
-                  icon: "success",
-                });
-                this.ShowStories();
-              })
-              .catch((error) => {
-                swal.fire({
-                  title: "Lỗi",
-                  text: "Có lỗi xảy ra khi xóa truyện",
-                  icon: "error",
-                });
-                console.error(error);
-              });
-          }
-        });
-    },
-  },
 };
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
