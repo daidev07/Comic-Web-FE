@@ -128,6 +128,28 @@
           <!-- End Default Table Example -->
         </div>
         <!-- End Danh sách chương -->
+
+        <div class="pagetitle" style="margin-top: -18px">
+          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2">Bình luận</h1>
+          <div class="mt-2">
+            <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text" placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
+          </div>
+          <div class="d-flex justify-content-end mt-1">
+            <button @click="addNewComment()" type="button" class="btn btn-success my-1 px-3">Gửi</button>
+          </div>
+
+          <div class="d-flex w-100" v-for="comment in comments" :key="comment.id">
+            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-1" style="height: 50px; width: 50px" />
+            <div class="nguoibinhluan d-flex flex-column mb-2 w-100 ms-2">
+              <div class="">
+                <label for="" class="fw-bold ms-1 text-success">{{ comment?.user.hoten }}</label>
+                <label for="" class="ms-2" style="font-size: 14px">{{ formatDateFromNow(comment.thoi_gian_dang) }}</label>
+              </div>
+              <label for="" class="fw-bold bg-secondary-subtle p-2 rounded-2">{{ comment.noidung }}</label>
+              <a href="" class="ms-2 fs-9 text-danger" style="font-size: 14px">Xoá</a>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
     <!-- End #main -->
@@ -139,6 +161,8 @@ import SideBar from "./Sidebar.vue";
 import Header from "../../components/Header.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { formatDistanceToNow } from "date-fns";
+import viLocale from "date-fns/locale/vi";
 export default {
   name: "ChiTietTruyen",
   components: { SideBar, Header },
@@ -154,6 +178,22 @@ export default {
         gioithieu: null,
         view: null,
         categories: [],
+      },
+      comments: [
+        {
+          id: null,
+          user: {
+            hoten: null,
+          },
+          id_truyen: null,
+          noidung: null,
+          thoi_gian_dang: null,
+        },
+      ],
+      newComment: {
+        userId: null,
+        storyId: null,
+        noidung: null,
       },
       currentUser: null,
       isFavorite: false,
@@ -221,6 +261,48 @@ export default {
         console.error("Error fetching stories data:", error);
       }
     },
+    async getAllCommentsByStoryId() {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/comment/${this.truyenId}`);
+        this.comments = response.data.reverse();
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching stories data:", error);
+      }
+    },
+    async addNewComment() {
+      try {
+        if (!this.currentUser) {
+          Swal.fire("Bạn chưa đăng nhập!", "Bạn phải đăng nhập mới có thể bình luận!", "error").then(() => {
+            window.location.reload();
+          });
+        } else {
+          this.newComment.storyId = this.truyenId;
+          this.newComment.userId = this.currentUser.id;
+          this.newComment.thoi_gian_dang = new Date(); // Lấy thời gian hiện tại
+          await axios.post("http://localhost:8000/api/comment/add", this.newComment);
+          this.newComment = {
+            userId: null,
+            storyId: null,
+            noidung: null,
+          };
+          Swal.fire({
+            title: "Đã thêm bình luận mới",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+            confirmButtonText: "OK",
+            timer: 1500,
+          }).then(() => {
+            window.location.reload();
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching stories data:", error);
+      }
+    },
+    formatDateFromNow(date) {
+      return formatDistanceToNow(new Date(date), { locale: viLocale, addSuffix: true });
+    },
   },
   mounted() {
     this.truyenId = this.$route.params.id;
@@ -229,6 +311,7 @@ export default {
     this.getDetailStory(this.truyenId);
     this.getDetailStory();
     this.checkFavorite();
+    this.getAllCommentsByStoryId();
   },
 };
 </script>
