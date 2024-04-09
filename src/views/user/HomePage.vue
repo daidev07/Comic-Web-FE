@@ -55,7 +55,7 @@
           <div class="card mb-0" v-for="story in stories" :key="story.id">
             <div class="card-body col-lg-2 mt-3" style="width: calc((1543px - 40px) / 5)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
-                <img :src="'data:image/jpeg;base64,' + story.avt" class="card-img-top" alt="..." style="height: 300px" />
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top" alt="..." style="height: 300px" />
               </RouterLink>
 
               <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{ story.ten }} </RouterLink>
@@ -84,6 +84,7 @@ export default {
   components: { SideBar, Header },
   data() {
     return {
+      apiUrl: process.env.VUE_APP_URL,
       stories: [
         {
           id: null,
