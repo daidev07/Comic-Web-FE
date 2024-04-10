@@ -35,7 +35,7 @@
                                     <div class="col col-3 text-center" data-label="Customer Name">
                                         <RouterLink :to="{ path: `/admin/chi-tiet/${story.id}` }" class="image-link">
                                             <button class="btn" style="background-color: #1e3a63; color: white">
-                                                <i class="bi bi-info-circle"></i>
+                                              <i class="bi bi-card-list"></i>
                                             </button>
                                         </RouterLink> 
                                     </div>
