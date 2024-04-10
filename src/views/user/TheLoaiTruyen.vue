@@ -72,7 +72,7 @@ export default {
         console.log("test::", response.data);
         this.category.stories = response.data;
       } catch (error) {
-        console.error("Error fetching stories data:", error);
+        console.error("Error fetching stories by category:: ", error);
       }
     },
     async clickDetail() {},

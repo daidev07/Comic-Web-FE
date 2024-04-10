@@ -11,7 +11,8 @@
         <div class="card mb-3">
           <div class="row g-0">
             <div class="col-md-4">
-              <img :src="`${this.apiUrl}/${detailTruyen.avt}`" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 100%; height: 600px" />
+              <img :src="`${this.apiUrl}/${detailTruyen.avt}`" class="img-fluid rounded-3 mt-3 ms-3" alt="..."
+                style="width: 100%; height: 600px" />
             </div>
             <div class="col-md-8">
               <div class="card-body ms-3">
@@ -28,8 +29,11 @@
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="yeuthich">
-                  <button v-if="!isFavorite" type="button" class="btn btn-success" @click="postFavorite()"><i class="bi bi-star me-1"></i> Yêu thích</button>
-                  <button v-else type="button" class="btn btn-success" @click="deleteFavorite()"><i class="bi bi-star me-1"></i> Bỏ yêu thích</button>
+                  <button v-if="!isFavorite" type="button" class="btn btn-success" @click="postFavorite()"><i
+                      class="bi bi-star me-1"></i> Yêu thích</button>
+                  <button v-if="isFavorite" type="button" class="btn btn-success" @click="deleteFavorite()"><i
+                      class="bi bi-star me-1"></i> Bỏ yêu
+                    thích</button>
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="d-flex gap-2">
@@ -69,37 +73,38 @@
               </tr>
             </thead>
             <tbody>
-                <tr class="fs-8"  v-for="chapter in chapters" :key=chapter?.id>
-                  <td class="fw-bold" scope="row" style="font-size: 18px">
-                    <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }">
-                      Chapter {{ chapter.so}}: {{ chapter.ten }} 
-                    </RouterLink>
-                  </td>
-                  <td class="col-2 text-center" ><i class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
-                  <td class="col-2 text-center" >16 phút trước</td>
-                  <td class="col-2 text-center">1.234</td>
-                </tr>
+              <tr class="fs-8" v-for="chapter in chapters" :key=chapter?.id>
+                <td class="fw-bold" scope="row" style="font-size: 18px">
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }">
+                    Chapter {{ chapter.so }}: {{ chapter.ten }}
+                  </RouterLink>
+                </td>
+                <td class="col-2 text-center"><i class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
+                <td class="col-2 text-center">{{ formatTimeAgo(chapter.thoi_gian_dang) }}</td>
+                <td class="col-2 text-center">1.234</td>
+              </tr>
             </tbody>
           </table>
           <!-- End Default Table Example -->
         </div>
         <!-- End Danh sách chương -->
-
         <div class="pagetitle" style="margin-top: -18px">
           <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2">Bình luận</h1>
           <div class="mt-2">
-            <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text" placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
+            <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text"
+              placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
           </div>
           <div class="d-flex justify-content-end mt-1">
             <button @click="addNewComment()" type="button" class="btn btn-success my-1 px-3">Gửi</button>
           </div>
 
           <div class="d-flex w-100" v-for="comment in comments" :key="comment.id">
-            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-1" style="height: 50px; width: 50px" />
+            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-1"
+              style="height: 50px; width: 50px" />
             <div class="nguoibinhluan d-flex flex-column mb-2 w-100 ms-2">
               <div class="">
                 <label for="" class="fw-bold ms-1 text-success">{{ comment?.user.hoten }}</label>
-                <label for="" class="ms-2" style="font-size: 14px">{{ formatDateFromNow(comment.thoi_gian_dang) }}</label>
+                <label for="" class="ms-2" style="font-size: 14px">{{ formatTimeAgo(comment.thoi_gian_dang) }}</label>
               </div>
               <label for="" class="fw-bold bg-secondary-subtle p-2 rounded-2">{{ comment.noidung }}</label>
               <a href="" class="ms-2 fs-9 text-danger" style="font-size: 14px">Xoá</a>
@@ -111,7 +116,7 @@
     <!-- End #main -->
   </div>
 
-<!-- TOAST -->
+  <!-- TOAST -->
 
 </template>
 
@@ -120,8 +125,6 @@ import SideBar from "./Sidebar.vue";
 import Header from "../../components/Header.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { formatDistanceToNow } from "date-fns";
-import viLocale from "date-fns/locale/vi";
 export default {
   name: "ChiTietTruyen",
   components: { SideBar, Header },
@@ -135,6 +138,7 @@ export default {
         ten: null,
         tacgia: null,
         gioithieu: null,
+        thoi_gian_dang: null,
         view: null,
         categories: [],
       },
@@ -162,7 +166,6 @@ export default {
   mounted() {
     this.truyenId = this.$route.params.id;
     this.currentUser = JSON.parse(window.localStorage.getItem("loggedInUser"));
-    console.log(this.truyenId); // In ra giá trị của userId
     this.getDetailStory(this.truyenId);
     this.getDetailStory();
     this.checkFavorite();
@@ -184,24 +187,6 @@ export default {
         console.error("Error fetching getDetailStory data:", error);
       }
     },
-    async postFavorite() {
-      if (!this.currentUser) {
-        Swal.fire("Bạn chưa đăng nhập!", "Bạn phải đăng nhập mới có thể thêm vào danh sách yêu thích!", "error");
-      } else {
-        const data = { id_story: this.detailTruyen.id, id_user: this.currentUser.id };
-        const response = await axios.post("http://localhost:8000/api/favorite", data);
-        console.log("test::", response.data);
-        Swal.fire({
-          title: "Đã thêm truyện vào danh sách yêu thích",
-          icon: "success",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "OK",
-          timer: 1500,
-        }).then(() => {
-          window.location.reload();
-        });
-      }
-    },
     async checkFavorite() {
       try {
         const response = await axios.get(`http://localhost:8000/api/favorite/${this.currentUser.id}/${this.truyenId}`);
@@ -209,25 +194,44 @@ export default {
         if (data2) {
           this.isFavorite = true;
         }
+        else {
+          this.isFavorite = false;
+        }
       } catch (error) {
         console.error("Error fetching favorites data:", error);
+      }
+    },
+    async postFavorite() {
+      if (!this.currentUser) {
+        Swal.fire("Bạn chưa đăng nhập!", "Bạn phải đăng nhập mới có thể thêm vào danh sách yêu thích!", "error");
+      } else {
+        const data = { id_story: this.detailTruyen.id, id_user: this.currentUser.id };
+        const response = await axios.post("http://localhost:8000/api/favorite", data);
+        console.log("THÊM VÀO YÊU THÍCH::", response.data);
+        Swal.fire({
+          title: "Đã thêm truyện vào danh sách yêu thích",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK",
+          timer: 1000,
+        });
+        this.isFavorite = true;
       }
     },
     async deleteFavorite() {
       try {
         const response = await axios.delete(`http://localhost:8000/api/favorite/${this.currentUser.id}/${this.truyenId}`);
-        console.log("test::", response.data);
+        console.log("XÓA KHỎI YÊU THÍCH::", response.data);
         Swal.fire({
           title: "Bạn đã bỏ yêu thích truyện này!",
           icon: "success",
           confirmButtonColor: "#3085d6",
           confirmButtonText: "OK",
-          timer: 1500,
-        }).then(() => {
-          window.location.reload();
+          timer: 1000,
         });
+        this.isFavorite = false;
       } catch (error) {
-        console.error("Error fetching stories data:", error);
+        console.error("Error check favorite data:", error);
       }
     },
     async getAllCommentsByStoryId() {
@@ -236,7 +240,7 @@ export default {
         this.comments = response.data.reverse();
         console.log(response.data);
       } catch (error) {
-        console.error("Error fetching stories data:", error);
+        console.error("Error fetching all comments data:", error);
       }
     },
     async addNewComment() {
@@ -248,29 +252,26 @@ export default {
         } else {
           this.newComment.storyId = this.truyenId;
           this.newComment.userId = this.currentUser.id;
-          this.newComment.thoi_gian_dang = new Date(); // Lấy thời gian hiện tại
+          this.newComment.noidung = this.newComment.noidung;
+          console.log("DỮ LIỆU COMMENT:: ", this.newComment);
           await axios.post("http://localhost:8000/api/comment/add", this.newComment);
+          this.getAllCommentsByStoryId();
           this.newComment = {
             userId: null,
             storyId: null,
             noidung: null,
           };
           Swal.fire({
-            title: "Đã thêm bình luận mới",
+            title: "Đã gửi bình luận",
             icon: "success",
             confirmButtonColor: "#3085d6",
             confirmButtonText: "OK",
-            timer: 1500,
-          }).then(() => {
-            window.location.reload();
-          });
+            timer: 1000,
+          })
         }
       } catch (error) {
-        console.error("Error fetching stories data:", error);
+        console.error("Error post comment:", error);
       }
-    },
-    formatDateFromNow(date) {
-      return formatDistanceToNow(new Date(date), { locale: viLocale, addSuffix: true });
     },
     async fetchChapters() {
       try {
@@ -284,6 +285,27 @@ export default {
         console.error("Error fetching chapters data:", error);
       }
     },
+    formatTimeAgo(timestamp) {
+      if (!timestamp || timestamp.length < 6) {
+        return ""; // Trả về một giá trị rỗng nếu timestamp không hợp lệ
+      }
+      const currentDate = new Date();
+      const postDate = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5]);
+
+      const timeDifference = currentDate - postDate;
+      const seconds = Math.floor(timeDifference / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (days > 0) {
+        return `${days} ngày trước`;
+      } else if (hours > 0) {
+        return `${hours} giờ trước`;
+      } else {
+        return `${minutes} phút trước`;
+      }
+    }
   },
 
 };

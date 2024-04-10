@@ -12,9 +12,12 @@
             <!-- Slides with captions -->
             <div id="carouselExampleCaptions" class="carousel slide carousel-small mt-3" data-bs-ride="carousel">
               <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                  aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                  aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                  aria-label="Slide 3"></button>
               </div>
               <div class="carousel-inner">
                 <div class="carousel-item active bg-danger-subtle">
@@ -31,11 +34,13 @@
                 </div>
               </div>
 
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
@@ -58,10 +63,11 @@
                 <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top" alt="..." style="height: 300px" />
               </RouterLink>
 
-              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{ story.ten }} </RouterLink>
+              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{
+            story.ten }} </RouterLink>
               <div class="d-flex justify-content-between mt-2">
                 <RouterLink :to="{ path: '/reading' }"> Chap 01 </RouterLink>
-                <span>10 phút trước</span>
+                <span>{{ latestChapterTimes[story.id] }}</span>
               </div>
             </div>
           </div>
@@ -92,6 +98,7 @@ export default {
           ten: null,
           tacgia: null,
           gioithieu: null,
+          thoi_gian_dang: null,
           view: null,
         },
       ],
@@ -99,6 +106,21 @@ export default {
   },
   mounted() {
     this.ShowStories();
+  },
+  computed: {
+    latestChapterTimes() {
+      const latestChapterTimes = {};
+      this.stories.forEach(story => {
+        if (story.chapters && story.chapters.length > 0) {
+          const reversedChapters = story.chapters.slice().reverse();
+          const latestChapterTime = reversedChapters[0].thoi_gian_dang;
+          latestChapterTimes[story.id] = this.formatTimeAgo(latestChapterTime);
+        } else {
+          latestChapterTimes[story.id] = "";
+        }
+      });
+      return latestChapterTimes;
+    }
   },
   methods: {
     async ShowStories() {
@@ -110,7 +132,28 @@ export default {
         console.error("Error fetching stories data:", error);
       }
     },
-    async clickDetail() {},
+    async clickDetail() { },
+    formatTimeAgo(timestamp) {
+      if (!timestamp || timestamp.length < 6) {
+        return ""; // Trả về một giá trị rỗng nếu timestamp không hợp lệ
+      }
+      const currentDate = new Date();
+      const postDate = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5]);
+
+      const timeDifference = currentDate - postDate;
+      const seconds = Math.floor(timeDifference / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (days > 0) {
+        return `${days} ngày trước`;
+      } else if (hours > 0) {
+        return `${hours} giờ trước`;
+      } else {
+        return `${minutes} phút trước`;
+      }
+    }
   },
 };
 </script>
@@ -149,12 +192,15 @@ a {
 
 /* Hiệu ứng khi hover vào ảnh */
 .image-link:hover img {
-  transform: scale(1.1); /* Zoom ảnh lên 110% */
-  transition: transform 0.3s ease; /* Hiệu ứng chuyển đổi mềm mại */
+  transform: scale(1.1);
+  /* Zoom ảnh lên 110% */
+  transition: transform 0.3s ease;
+  /* Hiệu ứng chuyển đổi mềm mại */
 }
 
 /* Thiết lập hiệu ứng transition cho ảnh */
 .card-body img {
-  transition: transform 0.3s ease; /* Thiết lập transition cho hiệu ứng */
+  transition: transform 0.3s ease;
+  /* Thiết lập transition cho hiệu ứng */
 }
 </style>
