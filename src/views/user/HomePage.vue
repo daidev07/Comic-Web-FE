@@ -66,8 +66,9 @@
               <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{
             story.ten }} </RouterLink>
               <div class="d-flex justify-content-between mt-2">
-                <RouterLink :to="{ path: '/reading' }"> Chap 01 </RouterLink>
-                <span>{{ latestChapterTimes[story.id] }}</span>
+                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> 
+                  Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
+                <span>{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
             </div>
           </div>
@@ -108,26 +109,37 @@ export default {
     this.ShowStories();
   },
   computed: {
-    latestChapterTimes() {
-      const latestChapterTimes = {};
+    getLatestChapterInfo() {
+      const latestChapterInfo = {};
       this.stories.forEach(story => {
         if (story.chapters && story.chapters.length > 0) {
           const reversedChapters = story.chapters.slice().reverse();
           const latestChapterTime = reversedChapters[0].thoi_gian_dang;
-          latestChapterTimes[story.id] = this.formatTimeAgo(latestChapterTime);
+          const latestChapterNumber = reversedChapters[0].so;
+          const latestChapterId = reversedChapters[0].id;
+          latestChapterInfo[story.id] = {
+            time: this.formatTimeAgo(latestChapterTime),
+            so: latestChapterNumber,
+            id: latestChapterId
+          };
         } else {
-          latestChapterTimes[story.id] = "";
+          latestChapterInfo[story.id] = {
+            time: "",
+            so: "",
+            id: ""
+          };
         }
       });
-      return latestChapterTimes;
-    }
+      return latestChapterInfo;
+    },
+
   },
   methods: {
     async ShowStories() {
       try {
         const reponse = await axios.get("http://localhost:8000/api/story");
         this.stories = reponse.data.reverse();
-        console.log("DANH SÁCH TRUYỆN", this.stories);
+        console.log("DANH SÁCH TRUYỆN:: ", this.stories);
       } catch (error) {
         console.error("Error fetching stories data:", error);
       }
