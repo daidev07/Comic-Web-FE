@@ -271,7 +271,6 @@ export default {
             confirmButtonText: "OK",
             timer: 1500
           }).then(() => {
-            // Sau khi Swal đã đóng, reload trang
             window.location.reload();
           });
         }

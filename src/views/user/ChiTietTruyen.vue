@@ -5,7 +5,7 @@
     <main id="main" class="main">
       <div class="chitiettruyen">
         <div class="pagetitle">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2">Chi tiết truyện</h1>
+          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">CHI TIẾT</h1>
         </div>
         <!-- Thông tin truyện -->
         <div class="card mb-3">
@@ -19,12 +19,14 @@
                 <h1 class="card-title fw-bold fs-1">{{ detailTruyen.ten }}</h1>
                 <h1 class="card-title fw-bold">Tác giả: {{ detailTruyen.tacgia }}</h1>
                 <h1 class="card-title fw-bold">Trạng thái: Đang thực hiện</h1>
-                <h1 class="card-title fw-bold">Chap mới nhất: 80</h1>
+                <h1 class="card-title fw-bold">Chương mới nhất: {{ chapters[0]?.so }}</h1>
                 <h1 class="card-title fw-bold">Lịch cập nhật: 21h thứ 4 hàng tuần</h1>
                 <h1 class="card-title fw-bold">Thể loại:</h1>
                 <div class="d-flex gap-2 theloai">
-                  <template v-for="(category, index) in detailTruyen.categories" :key="index">
-                    <button type="button" class="btn btn-outline-primary">{{ category }}</button>
+                  <template v-for="category in detailTruyen.categories" :key="category?.id">
+                    <RouterLink :to="{ path: `/theloaitruyen/${category?.id}` }">
+                      <button type="button" class="btn btn-outline-primary">{{ category?.ten }}</button>
+                    </RouterLink>
                   </template>
                 </div>
                 <h1 class="card-title fw-bold"></h1>
@@ -37,11 +39,11 @@
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="d-flex gap-2">
-                  <RouterLink :to="{ path: '/doc-truyen' }">
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapters[chapters.length - 1]?.id}` }">
                     <button type="button" class="btn btn-danger">Đọc từ đầu</button>
                   </RouterLink>
-                  <RouterLink :to="{ path: '/doc-truyen' }">
-                    <button type="button" class="btn btn-primary">Đọc tiếp chương 80</button>
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapters[0]?.id}` }">
+                    <button type="button" class="btn btn-primary">Đọc chương mới nhất</button>
                   </RouterLink>
                 </div>
               </div>
@@ -50,7 +52,7 @@
         </div>
         <!-- End thông tin truyện -->
         <div class="pagetitle" style="margin-top: -4px">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2">Nội dung truyện</h1>
+          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">NỘI DUNG TRUYỆN</h1>
         </div>
         <!-- Mô tả nội dung -->
         <div class="card p-2">
@@ -58,7 +60,7 @@
         </div>
         <!-- End Mô tả nội dung -->
         <div class="pagetitle" style="margin-top: -18px">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2">Danh sách chương</h1>
+          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">DANH SÁCH CHƯƠNG</h1>
         </div>
         <!-- Danh sách chương -->
         <div class="card p-2">
@@ -81,7 +83,7 @@
                 </td>
                 <td class="col-2 text-center"><i class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
                 <td class="col-2 text-center">{{ formatTimeAgo(chapter.thoi_gian_dang) }}</td>
-                <td class="col-2 text-center">1.234</td>
+                <td class="col-2 text-center">{{ chapter.view }}</td>
               </tr>
             </tbody>
           </table>
@@ -89,7 +91,7 @@
         </div>
         <!-- End Danh sách chương -->
         <div class="pagetitle" style="margin-top: -18px">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2">Bình luận</h1>
+          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">BÌNH LUẬN</h1>
           <div class="mt-2">
             <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text"
               placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
@@ -166,9 +168,7 @@ export default {
   mounted() {
     this.truyenId = this.$route.params.id;
     this.currentUser = JSON.parse(window.localStorage.getItem("loggedInUser"));
-    this.getDetailStory(this.truyenId);
     this.getDetailStory();
-    this.checkFavorite();
     this.getAllCommentsByStoryId();
     this.fetchChapters();
   },
@@ -176,13 +176,11 @@ export default {
     async getDetailStory() {
       try {
         let response = await axios.get(`http://localhost:8000/api/story/${this.truyenId}`);
-        console.log(response.data);
+        console.log("DỮ LIỆU CHI TIẾT CỦA TRUYỆN NÀY:: ", response.data);
         this.detailTruyen = response.data;
         response = await axios.get(`http://localhost:8000/api/story/${this.truyenId}/categories`);
-        const categories = response.data;
-        const categoryNames = categories.map((category) => category.ten);
-        this.detailTruyen.categories = categoryNames;
-        console.log("Truyện có id là ", this.detailTruyen.id + " có thể loại: " + categoryNames);
+        this.detailTruyen.categories = response.data;
+        console.log("Truyện có id là", this.detailTruyen.id + " có thể loại: " + response.data);
       } catch (error) {
         console.error("Error fetching getDetailStory data:", error);
       }
@@ -198,7 +196,7 @@ export default {
           this.isFavorite = false;
         }
       } catch (error) {
-        console.error("Error fetching favorites data:", error);
+        console.error("Error checking favorites:", error);
       }
     },
     async postFavorite() {
@@ -238,7 +236,7 @@ export default {
       try {
         const response = await axios.get(`http://localhost:8000/api/comment/${this.truyenId}`);
         this.comments = response.data.reverse();
-        console.log(response.data);
+        console.log("TẤT CẢ COMMENT:: ", response.data);
       } catch (error) {
         console.error("Error fetching all comments data:", error);
       }
@@ -279,7 +277,7 @@ export default {
           this.apiUrl + `/api/chapter/${this.truyenId}`
         );
         this.chapters = reponse.data;
-        console.log("DANH SÁCH CHƯƠNG", this.chapters);
+        console.log("DANH SÁCH CHƯƠNG CÓ TRONG TRUYỆN NÀY:: ", this.chapters);
         this.chapters.reverse();
       } catch (error) {
         console.error("Error fetching chapters data:", error);
