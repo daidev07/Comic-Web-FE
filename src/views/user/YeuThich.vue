@@ -9,14 +9,18 @@
         </div>
         <!-- list item -->
         <div class="d-flex flex-wrap" style="gap: 10px">
+          <div v-if="checkFavorites" class=" mt-3 fw-bold h4">
+            <p>Bạn chưa thêm yêu thích truyện nào</p>
+          </div>
           <!-- item -->
-          <div class="card mb-0" v-for="story in favoriteStories" :key="story.id">
+          <div v-else class="card mb-0" v-for="story in favoriteStories" :key="story.id">
             <div class="card-body col-lg-2 mt-3" style="width: calc((1543px - 40px) / 5)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
                 <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top" alt="..." style="height: 300px" />
               </RouterLink>
 
-              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{ story.ten }} </RouterLink>
+              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{
+            story.ten }} </RouterLink>
               <div class="d-flex justify-content-between mt-2">
                 <RouterLink :to="{ path: '/reading' }"> Chap 01 </RouterLink>
                 <span>10 phút trước</span>
@@ -53,6 +57,7 @@ export default {
         },
       ],
       currentUser: null,
+      checkFavorites: true,
     };
   },
   mounted() {
@@ -64,9 +69,16 @@ export default {
       try {
         const reponse = await axios.get(`http://localhost:8000/api/favorite/${this.currentUser.id}`);
         this.favoriteStories = reponse.data.reverse();
-        console.log("DANH SÁCH TRUYỆN", this.favoriteStories);
+        this.checkFavorites = false
+        console.log("DANH SÁCH TRUYỆN NGƯỜI DÙNG YÊU THÍCH:: ", this.favoriteStories);
       } catch (error) {
-        console.error("Error fetching stories data:", error);
+        if (error.response && error.response.status == 404) {
+          this.checkFavorites = true;
+          console.log("Người dùng này chưa yêu thích truyện nào");
+        }
+        else {
+          console.error("Error fetching show favorites data:", error);
+        }
       }
     },
   },

@@ -48,7 +48,7 @@
       </li>
       <!-- End Top -->
 
-      <li class="nav-item">
+      <li class="nav-item" @click="checkLogIn()">
         <RouterLink class="nav-link" :to="{ path: '/lichsu' }">
           <i class="bi bi-card-list"></i>
           <span>Lịch sử</span>
