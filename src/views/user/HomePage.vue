@@ -66,7 +66,7 @@
               <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{
             story.ten }} </RouterLink>
               <div class="d-flex justify-content-between mt-2">
-                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> 
+                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }">
                   Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
                 <span>{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
@@ -188,9 +188,7 @@ li {
 a {
   color: #42b983;
 }
-</style>
 
-<style>
 .carousel-small,
 .carousel-small .carousel-inner,
 .carousel-small img {

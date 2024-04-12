@@ -69,19 +69,30 @@
             <thead>
               <tr class="fs-4">
                 <th class="fw-bold" scope="col">Tên chương</th>
-                <th class="fw-bold col-2 text-center" scope="col">Trạng thái</th>
+                <th class="fw-bold col-2 text-center" scope="col" v-if="currentUser">Trạng thái</th>
                 <th class="fw-bold col-2 text-center" scope="col">Cập nhật</th>
                 <th class="fw-bold col-2 text-center" scope="col">Lượt xem</th>
               </tr>
             </thead>
             <tbody>
               <tr class="fs-8" v-for="chapter in chapters" :key=chapter?.id>
-                <td class="fw-bold" scope="row" style="font-size: 18px">
-                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }">
+                <td scope="row" style="font-size: 18px" v-if="currentUser"
+                  @click="addHistory(currentUser.id, truyenId, chapter.id)">
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }"
+                    :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black">
                     Chapter {{ chapter.so }}: {{ chapter.ten }}
                   </RouterLink>
                 </td>
-                <td class="col-2 text-center"><i class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
+                <td scope="row" style="font-size: 18px" v-else>
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }"
+                    :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black">
+                    Chapter {{ chapter.so }}: {{ chapter.ten }}
+                  </RouterLink>
+                </td>
+
+                <td class="col-2 text-center" v-if="currentUser && isChapterRead(chapter.id)"><i class="bi bi-eye-slash-fill"
+                    style="font-size: 20px"></i></td>
+                <td class="col-2 text-center" v-if="currentUser && !isChapterRead(chapter.id)"><i class="bi bi-eye-fill" style="font-size: 20px"></i></td>
                 <td class="col-2 text-center">{{ formatTimeAgo(chapter.thoi_gian_dang) }}</td>
                 <td class="col-2 text-center">{{ chapter.view }}</td>
               </tr>
@@ -163,6 +174,8 @@ export default {
       currentUser: null,
       isFavorite: false,
       chapters: [],
+      histories: [],
+      historiesIds: false
     };
   },
   mounted() {
@@ -170,7 +183,9 @@ export default {
     this.currentUser = JSON.parse(window.localStorage.getItem("loggedInUser"));
     this.getDetailStory();
     this.getAllCommentsByStoryId();
+    this.checkFavorite();
     this.fetchChapters();
+    this.fetchHistory();
   },
   methods: {
     async getDetailStory() {
@@ -180,23 +195,29 @@ export default {
         this.detailTruyen = response.data;
         response = await axios.get(`http://localhost:8000/api/story/${this.truyenId}/categories`);
         this.detailTruyen.categories = response.data;
-        console.log("Truyện có id là", this.detailTruyen.id + " có thể loại: " + response.data);
       } catch (error) {
         console.error("Error fetching getDetailStory data:", error);
       }
     },
     async checkFavorite() {
       try {
-        const response = await axios.get(`http://localhost:8000/api/favorite/${this.currentUser.id}/${this.truyenId}`);
-        const data2 = response.data;
-        if (data2) {
-          this.isFavorite = true;
-        }
-        else {
-          this.isFavorite = false;
+        if (this.currentUser) {
+          const response = await axios.get(`http://localhost:8000/api/favorite/${this.currentUser.id}/${this.truyenId}`);
+          const data2 = response.data;
+          if (data2) {
+            this.isFavorite = true;
+          }
+          else {
+            this.isFavorite = false;
+          }
         }
       } catch (error) {
-        console.error("Error checking favorites:", error);
+        if (error.response && error.response.status == 404) {
+          console.log("Người dùng này chưa yêu thích truyện này!");
+        }
+        else {
+          console.error("Error fetching favorites data:", error);
+        }
       }
     },
     async postFavorite() {
@@ -244,9 +265,7 @@ export default {
     async addNewComment() {
       try {
         if (!this.currentUser) {
-          Swal.fire("Bạn chưa đăng nhập!", "Bạn phải đăng nhập mới có thể bình luận!", "error").then(() => {
-            window.location.reload();
-          });
+          Swal.fire("Bạn chưa đăng nhập!", "Bạn phải đăng nhập mới có thể bình luận!", "error");
         } else {
           this.newComment.storyId = this.truyenId;
           this.newComment.userId = this.currentUser.id;
@@ -281,6 +300,49 @@ export default {
         this.chapters.reverse();
       } catch (error) {
         console.error("Error fetching chapters data:", error);
+      }
+    },
+    async fetchHistory() {
+      try {
+        if (this.currentUser) {
+          const response = await axios.get(
+            this.apiUrl + `/api/history/get/${this.currentUser.id}/${this.truyenId}`
+          );
+          this.histories = response.data;
+          console.log("DANH SÁCH CHƯƠNG ĐÃ ĐỌC BỞI NGƯỜI DÙNG:: ", this.histories);
+          this.historiesIds = this.histories.map(history => history.id);
+          console.log("DANH SÁCH ID CHƯƠNG ĐÃ ĐỌC BỞI NGƯỜI DÙNG:: ", this.historiesIds);
+          this.histories.reverse();
+        }
+      } catch (error) {
+        if (error.response && error.response.status == 404) {
+          console.log("Người dùng này chưa đọc chương nào trong truyện này!");
+        }
+        else {
+          console.error("Error fetching histories data:", error);
+        }
+      }
+    },
+    isChapterRead(chapterId) {
+      if (this.currentUser) {
+        if (this.historiesIds && this.historiesIds.length > 0) {
+          return !this.historiesIds.includes(chapterId);
+        } else {
+          return true;
+        }
+      }
+      else
+        return true;
+    },
+    async addHistory(userId, storyId, chapterId) {
+      try {
+        console.log("ID USER:: ", userId);
+        console.log("ID STORY:: ", storyId);
+        console.log("ID STORY:: ", chapterId);
+        await axios.post(this.apiUrl + `/api/history/add/${userId}/${storyId}/${chapterId}`)
+        console.log("ĐÃ THÊM CHƯƠNG NÀY VÀO LỊCH SỬ CỦA USER:: ");
+      } catch (error) {
+        console.error("Error adding history:: ", error);
       }
     },
     formatTimeAgo(timestamp) {
