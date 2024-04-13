@@ -16,15 +16,16 @@
           <!-- item -->
           <div v-else class="card mb-0" v-for="historyStory in historyStories" :key="historyStory.id">
             <div class="card-body col-lg-2 mt-3" style="width: calc((1543px - 40px) / 5)">
-              <RouterLink :to="{ path: `/chitiet/${historyStory.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${historyStory.avt}`" class="card-img-top" alt="..." style="height: 300px" />
+              <RouterLink :to="{ path: `/chitiet/${historyStory.story.id}` }" class="image-link">
+                <img :src="`${this.apiUrl}/${historyStory.story.avt}`" class="card-img-top" alt="..."
+                  style="height: 300px" />
                 <a class="card-text text-center d-block mt-2">
                   {{ historyStory.ten }}
                 </a>
               </RouterLink>
               <div class="d-flex justify-content-between mt-2">
                 <a>Lần cuối đọc</a>
-                <span></span>
+                <span>{{ formatTimeAgo(historyStory.lan_cuoi_doc) }}</span>
               </div>
             </div>
           </div>
@@ -70,20 +71,106 @@ export default {
   methods: {
     async showHistory() {
       try {
-        const reponse = await axios.get(`http://localhost:8000/api/history/get/${this.currentUser.id}`);
-        this.historyStories = reponse.data.reverse();
-        this.checkHistories = false;
+        const response = await axios.get(`http://localhost:8000/api/history/user/${this.currentUser.id}`);
+        const historyStories = response.data.reverse();
+        const latestReadTimes = {}; // Đối tượng để lưu thời gian gần nhất cho mỗi story.id
+
+        historyStories.forEach(history => {
+          const storyId = history.story.id;
+          const lastReadTime = new Date(...history.lan_cuoi_doc);
+
+          // Kiểm tra xem storyId đã tồn tại trong latestReadTimes hay chưa
+          if (latestReadTimes.hasOwnProperty(storyId)) {
+            // Nếu đã tồn tại, so sánh với thời gian đã lưu và cập nhật nếu cần
+            const storedTime = latestReadTimes[storyId];
+            if (lastReadTime > storedTime) {
+              latestReadTimes[storyId] = lastReadTime;
+            }
+          } else {
+            // Nếu chưa tồn tại, thêm mới vào đối tượng
+            latestReadTimes[storyId] = lastReadTime;
+          }
+        });
+
+        // Tạo một mảng mới để chỉ chứa lần đọc gần nhất của mỗi story.id
+        this.historyStories = Object.keys(latestReadTimes).map(storyId => {
+          const lastReadTime = latestReadTimes[storyId];
+          return historyStories.find(history => {
+            return history.story.id === parseInt(storyId) &&
+              new Date(...history.lan_cuoi_doc).getTime() === lastReadTime.getTime();
+          });
+        });
+
+        // Kiểm tra nếu không có lịch sử đọc
+        this.checkHistories = this.historyStories.length === 0;
+
         console.log("DANH SÁCH TRUYỆN ĐÃ ĐỌC BỞI NGƯỜI DÙNG", this.historyStories);
       } catch (error) {
         if (error.response && error.response.status == 404) {
           this.checkHistories = true;
           console.log("Người dùng này chưa đọc chương nào trong truyện này!");
-        }
-        else {
+        } else {
           console.error("Error fetching show history data:", error);
         }
       }
     },
+    async showHistory() {
+      try {
+        const response = await axios.get(`http://localhost:8000/api/history/user/${this.currentUser.id}`);
+        const historyStories = response.data;
+
+        // Tạo một đối tượng để lưu trữ thời gian gần nhất cho mỗi story.id
+        const latestReadTimes = {};
+
+        // Lặp qua lịch sử đọc để lấy thời gian gần nhất cho mỗi story.id
+        historyStories.forEach(history => {
+          const storyId = history.story.id;
+          const lastReadTime = new Date(...history.lan_cuoi_doc);
+
+          // Kiểm tra xem storyId đã tồn tại trong latestReadTimes hay chưa
+          if (latestReadTimes.hasOwnProperty(storyId)) {
+            // Nếu đã tồn tại, so sánh với thời gian đã lưu và cập nhật nếu cần
+            const storedTime = latestReadTimes[storyId];
+            if (lastReadTime > storedTime) {
+              latestReadTimes[storyId] = lastReadTime;
+            }
+          } else {
+            // Nếu chưa tồn tại, thêm mới vào đối tượng
+            latestReadTimes[storyId] = lastReadTime;
+          }
+        });
+
+        // Tạo một mảng mới để chỉ chứa lần đọc gần nhất của mỗi story.id
+        const latestReadStories = Object.keys(latestReadTimes).map(storyId => {
+          const lastReadTime = latestReadTimes[storyId];
+          return historyStories.find(history => {
+            return history.story.id === parseInt(storyId) &&
+              new Date(...history.lan_cuoi_doc).getTime() === lastReadTime.getTime();
+          });
+        });
+
+        // Sắp xếp các lần đọc theo thời gian đọc từ gần nhất đến xa nhất
+        latestReadStories.sort((a, b) => {
+          const timeA = new Date(...a.lan_cuoi_doc).getTime();
+          const timeB = new Date(...b.lan_cuoi_doc).getTime();
+          return timeB - timeA; // Sắp xếp từ gần nhất đến xa nhất
+        });
+
+        // Cập nhật danh sách lịch sử đọc
+        this.historyStories = latestReadStories;
+        this.checkHistories = this.historyStories.length === 0;
+
+        console.log("DANH SÁCH TRUYỆN ĐÃ ĐỌC BỞI NGƯỜI DÙNG", this.historyStories);
+      } catch (error) {
+        if (error.response && error.response.status == 404) {
+          this.checkHistories = true;
+          console.log("Người dùng này chưa đọc chương nào trong truyện này!");
+        } else {
+          console.error("Error fetching show history data:", error);
+        }
+      }
+    },
+
     formatTimeAgo(timestamp) {
       if (!timestamp || timestamp.length < 6) {
         return "";
