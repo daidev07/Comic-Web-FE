@@ -90,9 +90,10 @@
                   </RouterLink>
                 </td>
 
-                <td class="col-2 text-center" v-if="currentUser && isChapterRead(chapter.id)"><i class="bi bi-eye-slash-fill"
+                <td class="col-2 text-center" v-if="currentUser && isChapterRead(chapter.id)"><i
+                    class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
+                <td class="col-2 text-center" v-if="currentUser && !isChapterRead(chapter.id)"><i class="bi bi-eye-fill"
                     style="font-size: 20px"></i></td>
-                <td class="col-2 text-center" v-if="currentUser && !isChapterRead(chapter.id)"><i class="bi bi-eye-fill" style="font-size: 20px"></i></td>
                 <td class="col-2 text-center">{{ formatTimeAgo(chapter.thoi_gian_dang) }}</td>
                 <td class="col-2 text-center">{{ chapter.view }}</td>
               </tr>
