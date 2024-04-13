@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/components/Login.vue";
+import ErrorPage from "@/components/ErrorPage.vue";
 import HomePage from "@/views/user/HomePage.vue";
 import Dashboard from "@/views/admin/Dashboard.vue";
 import ChapterForStory from "@/views/admin/ChapterForStory.vue";
@@ -52,27 +53,27 @@ const routes = [
     name: "theloaitruyen",
     component: TheLoaiTruyen,
   },
-  {
-    path: "/toptruyen",
-    name: "toptruyen",
-    children: [
-      {
-        path: "topngay",
-        name: "topngay",
-        component: TopTruyen,
-      },
-      {
-        path: "toptuan",
-        name: "toptuan",
-        component: TopTruyen,
-      },
-      {
-        path: "topthang",
-        name: "topthang",
-        component: TopTruyen,
-      },
-    ],
-  },
+  // {
+  //   path: "/top",
+  //   name: "toptruyen",
+  //   children: [
+  //     {
+  //       path: "ngay",
+  //       name: "topngay",
+  //       component: TopTruyen,
+  //     },
+  //     {
+  //       path: "tuan",
+  //       name: "toptuan",
+  //       component: TopTruyen,
+  //     },
+  //     {
+  //       path: "thang",
+  //       name: "topthang",
+  //       component: TopTruyen,
+  //     },
+  //   ],
+  // },
   {
     path: "/lichsu",
     name: "lichsu",
@@ -84,22 +85,26 @@ const routes = [
     component: YeuThich,
   },
   {
+    path: "/404",
+    name: "error",
+    component: ErrorPage,
+  },
+  {
     path: "/chitiet/:id",
     name: "chitiet",
     children: [
-      { 
+      {
         path: "",
         name: "chitiet",
         component: ChiTietTruyen,
       },
-      { 
+      {
         path: "doc-truyen/:chapterId",
         name: "reading",
         component: Reading,
-      }
-    ]
+      },
+    ],
   },
-
 ];
 
 const router = createRouter({
@@ -108,6 +113,26 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     return { top: 0 };
   },
+});
+
+router.beforeEach((to, from, next) => {
+  // Kiểm tra xem có dữ liệu người dùng trong localStorage không
+  const loggedInUser = localStorage.getItem("loggedInUser");
+
+  // Kiểm tra xem người dùng đã đăng nhập chưa bằng cách kiểm tra loggedInUser
+  const isLoggedIn = loggedInUser !== null;
+
+  // Kiểm tra xem người dùng có quyền admin hay không dựa trên thông tin từ localStorage
+  const isAdmin = isLoggedIn ? JSON.parse(loggedInUser).is_admin === true : false;
+
+  // Kiểm tra route hiện tại có thuộc về admin không
+  const isAdminRoute = to.matched.some((record) => record.name === "admin");
+
+  if (isAdminRoute && !isAdmin) {
+    next({ path: "404" });
+  } else {
+    next();
+  }
 });
 
 export default router;

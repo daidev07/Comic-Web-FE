@@ -93,6 +93,9 @@ export default {
         const userFromApi = response.data;
         // Nếu người dùng tồn tại, tiến hành đăng nhập
         localStorage.setItem("loggedInUser", JSON.stringify(userFromApi));
+
+        const isAdmin = userFromApi.is_admin === true;
+
         Swal.fire({
           title: "Đăng nhập thành công",
           icon: "success",
@@ -100,10 +103,14 @@ export default {
           confirmButtonText: "OK",
           timer: 1500
         })
-        this.$router.push("/");
+        if(isAdmin){
+          this.$router.push("/admin");
+        } else {
+          this.$router.push("/");
+        }
+
       } catch (error) {
         console.error("Error:", error);
-        // Nếu người dùng không tồn tại, hiển thị thông báo lỗi hoặc thực hiện các thao tác khác
         Swal.fire("Tên đăng nhập hoặc mật khẩu không hợp lệ!", "Vui lòng kiểm tra lại!", "error");
         console.log("Tên đăng nhập không tồn tại");
         return;
