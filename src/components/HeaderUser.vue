@@ -14,8 +14,8 @@
         <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
           <div class="search-bar border rounded-2 px-3 border-dark-subtle">
             <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
-              <input type="text" class="form-control border-0 bg-transparent" placeholder="Tìm kiếm" />
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+              <input type="text" class="form-control border-0 bg-transparent" v-model="searchTerm" placeholder="Tìm kiếm" />
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" @click="handleSearch">
                 <path fill="currentColor" d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
               </svg>
             </form>
@@ -210,9 +210,15 @@ export default {
       isLoggedIn: false,
       categories: [],
       hoveredItem: 0,
+      searchTerm: null,
     };
   },
   methods: {
+    handleSearch() {
+      if (this.searchTerm) {
+        this.$router.push({ path: "/tim-kiem", query: { key: this.searchTerm } });
+      }
+    },
     logoutClick() {
       Swal.fire({
         title: "Bạn có chắc chắn muốn đăng xuất?",
@@ -273,5 +279,11 @@ export default {
 <style>
 .nav-item:hover {
   cursor: pointer; /* Đổi icon chuột khi hover vào */
+}
+
+/* CSS cho hiệu ứng hover */
+svg:hover {
+  color: #007bff; /* Thay đổi màu fill khi hover */
+  cursor: pointer; /* Thay đổi kiểu con trỏ khi hover */
 }
 </style>

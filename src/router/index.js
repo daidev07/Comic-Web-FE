@@ -13,6 +13,7 @@ import LichSu from "@/views/user/LichSu.vue";
 import YeuThich from "@/views/user/YeuThich.vue";
 import ChiTietTruyen from "@/views/user/ChiTietTruyen.vue";
 import Reading from "@/views/user/Reading.vue";
+import TimKiem from "@/views/user/TimKiem.vue";
 
 const routes = [
   {
@@ -78,6 +79,11 @@ const routes = [
     path: "/lichsu",
     name: "lichsu",
     component: LichSu,
+  },
+  {
+    path: "/tim-kiem",
+    name: "timkiem",
+    component: TimKiem,
   },
   {
     path: "/yeuthich",
