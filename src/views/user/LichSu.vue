@@ -40,7 +40,6 @@
 
 <script>
 import SideBar from "./Sidebar.vue";
-// import Header from "../../components/Header.vue";
 import HeaderUser from "../../components/HeaderUser.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -69,50 +68,6 @@ export default {
     this.showHistory();
   },
   methods: {
-    async showHistory() {
-      try {
-        const response = await axios.get(`http://localhost:8000/api/history/user/${this.currentUser.id}`);
-        const historyStories = response.data.reverse();
-        const latestReadTimes = {}; // Đối tượng để lưu thời gian gần nhất cho mỗi story.id
-
-        historyStories.forEach((history) => {
-          const storyId = history.story.id;
-          const lastReadTime = new Date(...history.lan_cuoi_doc);
-
-          // Kiểm tra xem storyId đã tồn tại trong latestReadTimes hay chưa
-          if (latestReadTimes.hasOwnProperty(storyId)) {
-            // Nếu đã tồn tại, so sánh với thời gian đã lưu và cập nhật nếu cần
-            const storedTime = latestReadTimes[storyId];
-            if (lastReadTime > storedTime) {
-              latestReadTimes[storyId] = lastReadTime;
-            }
-          } else {
-            // Nếu chưa tồn tại, thêm mới vào đối tượng
-            latestReadTimes[storyId] = lastReadTime;
-          }
-        });
-
-        // Tạo một mảng mới để chỉ chứa lần đọc gần nhất của mỗi story.id
-        this.historyStories = Object.keys(latestReadTimes).map((storyId) => {
-          const lastReadTime = latestReadTimes[storyId];
-          return historyStories.find((history) => {
-            return history.story.id === parseInt(storyId) && new Date(...history.lan_cuoi_doc).getTime() === lastReadTime.getTime();
-          });
-        });
-
-        // Kiểm tra nếu không có lịch sử đọc
-        this.checkHistories = this.historyStories.length === 0;
-
-        console.log("DANH SÁCH TRUYỆN ĐÃ ĐỌC BỞI NGƯỜI DÙNG", this.historyStories);
-      } catch (error) {
-        if (error.response && error.response.status == 404) {
-          this.checkHistories = true;
-          console.log("Người dùng này chưa đọc chương nào trong truyện này!");
-        } else {
-          console.error("Error fetching show history data:", error);
-        }
-      }
-    },
     async showHistory() {
       try {
         const response = await axios.get(`http://localhost:8000/api/history/user/${this.currentUser.id}`);
