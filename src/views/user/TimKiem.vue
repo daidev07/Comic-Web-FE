@@ -3,56 +3,17 @@
   <!-- <SideBar /> -->
   <div>
     <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
-      <div class="truyendecu">
-        <div class="pagetitle">
-          <h1 class="fw-bold">TRUYỆN ĐỀ CỬ</h1>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <!-- Slides with captions -->
-            <div id="carouselExampleCaptions" class="carousel slide carousel-small" data-bs-ride="carousel">
-              <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-              </div>
-              <div class="carousel-inner">
-                <div class="carousel-item active bg-danger-subtle">
-                  <img src="../../../public/assets/truyen/1.jpg" class="d-block w-100" alt="..." />
-                  <div class="carousel-caption d-none d-md-block"></div>
-                </div>
-                <div class="carousel-item bg-info-subtle">
-                  <img src="../../../public/assets/truyen/2.jpg" class="d-block w-100" alt="..." />
-                  <div class="carousel-caption d-none d-md-block"></div>
-                </div>
-                <div class="carousel-item bg-primary-subtle">
-                  <img src="../../../public/assets/truyen/3.jpg" class="d-block w-100" alt="..." />
-                  <div class="carousel-caption d-none d-md-block"></div>
-                </div>
-              </div>
-
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-            <!-- End Slides with captions -->
-          </div>
-        </div>
-      </div>
-
       <div class="truyenmoicapnhat">
         <div class="pagetitle">
-          <h1 class="fw-bold">TRUYỆN MỚI CẬP NHẬT</h1>
+          <h1 class="fw-bold">DANH SÁCH TÌM KIẾM</h1>
         </div>
         <!-- list item -->
         <div class="d-flex flex-wrap" style="gap: 10px">
+          <div v-if="searchStories.length === 0" class="mt-3 fw-bold h4">
+            <p>Không tìm thấy tên truyện phù hợp</p>
+          </div>
           <!-- item -->
-          <div class="card mb-0" v-for="story in stories" :key="story.id">
+          <div v-else class="card mb-0" v-for="story in searchStories" :key="story.id">
             <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
                 <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px" />
@@ -75,42 +36,38 @@
 </template>
 
 <script>
-import SideBar from "./Sidebar.vue";
-import Header from "../../components/Header.vue";
-import HeaderUser from "../../components/HeaderUser.vue";
 import axios from "axios";
-import Swal from "sweetalert2";
+import HeaderUser from "@/components/HeaderUser.vue";
 export default {
-  name: "HomePage",
-  components: { SideBar, HeaderUser },
+  name: "TimKiem",
+  components: { HeaderUser },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,
-      stories: [
+      searchStories: [
         {
           id: null,
           avt: null,
           ten: null,
           tacgia: null,
           gioithieu: null,
-          thoi_gian_dang: null,
           view: null,
         },
       ],
-      storiesolds: [],
-      timkiem: {
-        ten_truyen: null,
-        id_truyen: "0",
-      },
     };
   },
   mounted() {
-    this.ShowStories();
+    this.showsearchList(this.$route.query.key);
+  },
+  watch: {
+    "$route.query.key": function (newKey) {
+      this.showsearchList(newKey);
+    },
   },
   computed: {
     getLatestChapterInfo() {
       const latestChapterInfo = {};
-      this.stories.forEach((story) => {
+      this.searchStories.forEach((story) => {
         if (story.chapters && story.chapters.length > 0) {
           const reversedChapters = story.chapters.slice().reverse();
           const latestChapterTime = reversedChapters[0].thoi_gian_dang;
@@ -133,25 +90,20 @@ export default {
     },
   },
   methods: {
-    async ShowStories() {
+    async showsearchList(newKey) {
       try {
         const reponse = await axios.get("http://localhost:8000/api/story");
-        this.stories = reponse.data.reverse();
-        this.storiesolds = this.stories;
-        console.log("DANH SÁCH TRUYỆN:: ", this.stories);
+        this.searchStories = reponse.data.filter((story) => {
+          // nếu chỉ có tên truyện
+          if (newKey) {
+            return story.ten.toLowerCase().includes(newKey.toLowerCase());
+          }
+          return false;
+        });
+        console.log("DANH SÁCH TRUYỆN:: ", this.searchStories);
       } catch (error) {
         console.error("Error fetching stories data:", error);
       }
-    },
-    search() {
-      // include so sánh tìm kiếm cùng ký tự trong chuỗi
-      this.stories = this.storiesolds.filter((story) => {
-        // nếu chỉ có tên truyện
-        if (this.$route.query.key) {
-          return story.ten.toLowerCase().includes(this.$route.query.key.toLowerCase());
-        }
-        return true;
-      });
     },
     formatTimeAgo(timestamp) {
       if (!timestamp || timestamp.length < 6) {
@@ -196,7 +148,9 @@ li {
 a {
   color: #42b983;
 }
+</style>
 
+<style>
 .carousel-small,
 .carousel-small .carousel-inner,
 .carousel-small img {
