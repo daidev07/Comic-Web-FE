@@ -1,8 +1,8 @@
 <template>
-  <Header />
-  <SideBar />
+  <HeaderUser />
+  <!-- <SideBar /> -->
   <div>
-    <main id="main" class="main">
+    <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
       <div class="truyenmoicapnhat">
         <div class="pagetitle">
           <h1 class="fw-bold">LỊCH SỬ ĐỌC TRUYỆN</h1>
@@ -10,20 +10,20 @@
 
         <!-- list item -->
         <div class="d-flex flex-wrap" style="gap: 10px">
-          <div v-if="checkHistories" class=" mt-3 fw-bold h4">
+          <div v-if="checkHistories" class="mt-3 fw-bold h4">
             <p>Bạn chưa đọc bất kỳ truyện nào</p>
           </div>
           <!-- item -->
           <div v-else class="card mb-0" v-for="historyStory in historyStories" :key="historyStory.id">
-            <div class="card-body col-lg-2 mt-3" style="width: calc((1543px - 40px) / 5)">
+            <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${historyStory.story.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${historyStory.story.avt}`" class="card-img-top" alt="..."
-                  style="height: 300px" />
+                <img :src="`${this.apiUrl}/${historyStory.story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px" />
                 <a class="card-text text-center d-block mt-2">
                   {{ historyStory.ten }}
                 </a>
               </RouterLink>
-              <div class="d-flex justify-content-between mt-2">
+              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${historyStory.story.id}` }"> {{ historyStory.story.ten }} </RouterLink>
+              <div class="d-flex justify-content-between">
                 <a>Lần cuối đọc</a>
                 <span>{{ formatTimeAgo(historyStory.lan_cuoi_doc) }}</span>
               </div>
@@ -40,10 +40,10 @@
 
 <script>
 import SideBar from "./Sidebar.vue";
-import Header from "../../components/Header.vue";
+// import Header from "../../components/Header.vue";
+import HeaderUser from "../../components/HeaderUser.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
-
 
 export default {
   name: "LichSu",
@@ -58,12 +58,12 @@ export default {
           tacgia: null,
           gioithieu: null,
           thoi_gian_dang: null,
-        }
+        },
       ],
       checkHistories: true,
-    }
+    };
   },
-  components: { SideBar, Header },
+  components: { SideBar, HeaderUser },
   mounted() {
     this.currentUser = JSON.parse(window.localStorage.getItem("loggedInUser"));
     this.showHistory();
@@ -75,7 +75,7 @@ export default {
         const historyStories = response.data.reverse();
         const latestReadTimes = {}; // Đối tượng để lưu thời gian gần nhất cho mỗi story.id
 
-        historyStories.forEach(history => {
+        historyStories.forEach((history) => {
           const storyId = history.story.id;
           const lastReadTime = new Date(...history.lan_cuoi_doc);
 
@@ -93,11 +93,10 @@ export default {
         });
 
         // Tạo một mảng mới để chỉ chứa lần đọc gần nhất của mỗi story.id
-        this.historyStories = Object.keys(latestReadTimes).map(storyId => {
+        this.historyStories = Object.keys(latestReadTimes).map((storyId) => {
           const lastReadTime = latestReadTimes[storyId];
-          return historyStories.find(history => {
-            return history.story.id === parseInt(storyId) &&
-              new Date(...history.lan_cuoi_doc).getTime() === lastReadTime.getTime();
+          return historyStories.find((history) => {
+            return history.story.id === parseInt(storyId) && new Date(...history.lan_cuoi_doc).getTime() === lastReadTime.getTime();
           });
         });
 
@@ -123,7 +122,7 @@ export default {
         const latestReadTimes = {};
 
         // Lặp qua lịch sử đọc để lấy thời gian gần nhất cho mỗi story.id
-        historyStories.forEach(history => {
+        historyStories.forEach((history) => {
           const storyId = history.story.id;
           const lastReadTime = new Date(...history.lan_cuoi_doc);
 
@@ -141,11 +140,10 @@ export default {
         });
 
         // Tạo một mảng mới để chỉ chứa lần đọc gần nhất của mỗi story.id
-        const latestReadStories = Object.keys(latestReadTimes).map(storyId => {
+        const latestReadStories = Object.keys(latestReadTimes).map((storyId) => {
           const lastReadTime = latestReadTimes[storyId];
-          return historyStories.find(history => {
-            return history.story.id === parseInt(storyId) &&
-              new Date(...history.lan_cuoi_doc).getTime() === lastReadTime.getTime();
+          return historyStories.find((history) => {
+            return history.story.id === parseInt(storyId) && new Date(...history.lan_cuoi_doc).getTime() === lastReadTime.getTime();
           });
         });
 
@@ -191,8 +189,8 @@ export default {
       } else {
         return `${minutes} phút trước`;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -223,5 +221,19 @@ a {
 .carousel-small .carousel-control-prev-icon::after,
 .carousel-small .carousel-control-next-icon::after {
   content: "";
+}
+
+/* Hiệu ứng khi hover vào ảnh */
+.image-link:hover img {
+  transform: scale(1.1);
+  /* Zoom ảnh lên 110% */
+  transition: transform 0.3s ease;
+  /* Hiệu ứng chuyển đổi mềm mại */
+}
+
+/* Thiết lập hiệu ứng transition cho ảnh */
+.card-body img {
+  transition: transform 0.3s ease;
+  /* Thiết lập transition cho hiệu ứng */
 }
 </style>

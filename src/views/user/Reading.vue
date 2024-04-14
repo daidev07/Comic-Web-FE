@@ -1,18 +1,18 @@
 <template>
-  <Header />
-  <SideBar />
+  <HeaderUser />
+  <!-- <SideBar /> -->
   <div>
-    <main id="main" class="main">
+    <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
       <div class="reading">
-        <div class="menuChapter bg-danger-subtle p-1 ps-2 d-flex justify-content-center sticky-top" style="top: 60px; margin-top: -10px; z-index: 99">
+        <div class="menuChapter bg-danger-subtle p-1 ps-2 d-flex justify-content-center sticky-top" style="top: 0px; margin-top: -23px; z-index: 99">
           <RouterLink :to="{ path: '/' }">
             <button class="btn btn-success m-1 homepage">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
                 <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
               </svg></button
           ></RouterLink>
-          <RouterLink :to="{ path: '/chitiet' }"
-            ><button class="btn btn-success m-1">
+          <RouterLink :to="{ path: detailPath }"
+            ><button class="btn btn-success m-1 backDetailStory">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
                 <path
                   fill-rule="evenodd"
@@ -25,7 +25,7 @@
               <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z" />
             </svg>
           </button>
-          <select class="form-select w-25" aria-label="Default select example" @change="changeChapter" :value="chapterId">           
+          <select class="form-select w-25" aria-label="Default select example" @change="changeChapter" :value="chapterId">
             <option v-for="chapter in chapters" :key="chapter?.id" :value="chapter?.id">Chapter {{ chapter.so }}</option>
           </select>
           <button class="btn btn-danger m-1" @click="nextChapter">
@@ -47,20 +47,22 @@
 import SideBar from "./Sidebar.vue";
 import Header from "../../components/Header.vue";
 import axios from "axios";
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 import swal from "sweetalert2";
+import HeaderUser from "@/components/HeaderUser.vue";
 
 export default {
   name: "Reading",
-  data(){
+  data() {
     return {
       apiUrl: process.env.VUE_APP_URL,
       chapterId: null,
       chapter: [],
+      detailPath: null,
     };
   },
-  components: { SideBar, Header },
+  components: { SideBar, HeaderUser },
   mounted() {
     this.storyId = this.$route.params.id;
     console.log("ID STORY CỦA CHƯƠNG NÀY:: ", this.storyId);
@@ -69,14 +71,14 @@ export default {
     this.chapterId = this.$route.params.chapterId;
     this.fetchContent();
     console.log("ID CHAPTER ĐÃ CHỌN ĐỂ XEM:: ", this.chapterId);
-    
+
+    console.log("PATH HIỆN TẠI:: ", this.$route.path);
+    this.detailPath = this.$route.path.split("/doc-truyen")[0];
   },
   methods: {
     async fetchContent() {
       try {
-        const reponse = await axios.get(
-          this.apiUrl + `/api/chapter/get/${this.chapterId}`
-        );
+        const reponse = await axios.get(this.apiUrl + `/api/chapter/get/${this.chapterId}`);
         this.chapter = reponse.data;
         console.log("THÔNG TIN CHAPTER:: ", this.chapter);
       } catch (error) {
@@ -85,57 +87,53 @@ export default {
     },
     async fetchChapters() {
       try {
-        const reponse = await axios.get(
-          this.apiUrl + `/api/chapter/${this.storyId}`
-        );
+        const reponse = await axios.get(this.apiUrl + `/api/chapter/${this.storyId}`);
         this.chapters = reponse.data;
         console.log("DANH SÁCH CHƯƠNG:: ", this.chapters);
-
       } catch (error) {
         console.error("Error fetching chapters data:", error);
       }
     },
-    async changeChapter(e){
+    async changeChapter(e) {
       this.chapterId = e.target.value;
       console.log("SELECT OPTION CHUYỂN SANG CHAPTER CÓ ID:: ", this.chapterId);
       this.fetchContent();
-      this.$router.push({ path: `/chitiet/${this.storyId}/doc-truyen/${this.chapterId}`});
+      this.$router.push({ path: `/chitiet/${this.storyId}/doc-truyen/${this.chapterId}` });
     },
     async preChapter() {
-      const currentIndex = this.chapters.findIndex(chapter => chapter.id == this.chapterId);
+      const currentIndex = this.chapters.findIndex((chapter) => chapter.id == this.chapterId);
       console.log("CHUYỂN SANG CHAPTER ID:: ", this.chapterId);
       if (currentIndex > 0) {
         const previousChapterId = this.chapters[currentIndex - 1].id;
         this.chapterId = previousChapterId;
         this.fetchContent();
-        this.$router.push({ path: `/chitiet/${this.storyId}/doc-truyen/${this.chapterId}`});
+        this.$router.push({ path: `/chitiet/${this.storyId}/doc-truyen/${this.chapterId}` });
       } else {
         swal.fire({
           title: "Không có chapter trước đó",
           icon: "warning",
-          timer: 1000
+          timer: 1000,
         });
       }
     },
-    async nextChapter(){
-      const currentIndex = this.chapters.findIndex(chapter => chapter.id == this.chapterId);
+    async nextChapter() {
+      const currentIndex = this.chapters.findIndex((chapter) => chapter.id == this.chapterId);
       if (currentIndex < this.chapters.length - 1) {
         const nextChapterId = this.chapters[currentIndex + 1].id;
         this.chapterId = nextChapterId;
         console.log("CHUYỂN SANG CHAPTER ID:: ", nextChapterId);
         this.fetchContent();
-        this.$router.push({ path: `/chitiet/${this.storyId}/doc-truyen/${this.chapterId}`});
+        this.$router.push({ path: `/chitiet/${this.storyId}/doc-truyen/${this.chapterId}` });
       } else {
         swal.fire({
           title: "Đã là chương mới nhất, vui lòng đợi!",
           icon: "warning",
-          timer: 1000
-        })
+          timer: 1000,
+        });
       }
-    }
-  }
+    },
+  },
 };
-
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
