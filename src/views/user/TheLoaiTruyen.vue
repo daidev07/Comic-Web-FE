@@ -1,8 +1,8 @@
 <template>
-  <Header />
-  <SideBar />
+  <HeaderUser />
+  <!-- <SideBar /> -->
   <div>
-    <main id="main" class="main">
+    <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
       <div class="truyenmoicapnhat">
         <div class="pagetitle">
           <h1 class="fw-bold" @click="reload()">THỂ LOẠI: {{ category.ten ? category.ten.toUpperCase() : "" }}</h1>
@@ -11,15 +11,15 @@
         <div class="d-flex flex-wrap" style="gap: 10px">
           <!-- item -->
           <div class="card mb-0" v-for="story in category.stories" :key="story.id">
-            <div class="card-body col-lg-2 mt-3" style="width: calc((1543px - 40px) / 5)">
+            <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top" alt="..." style="height: 300px" />
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px" />
               </RouterLink>
 
               <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{ story.ten }} </RouterLink>
-              <div class="d-flex justify-content-between mt-2">
-                <RouterLink :to="{ path: '/reading' }"> Chap 01 </RouterLink>
-                <span>10 phút trước</span>
+              <div class="d-flex justify-content-between">
+                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
+                <span>{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
             </div>
           </div>
@@ -36,9 +36,10 @@
 import SideBar from "./Sidebar.vue";
 import Header from "../../components/Header.vue";
 import axios from "axios";
+import HeaderUser from "@/components/HeaderUser.vue";
 export default {
   name: "TheLoaiTruyen",
-  components: { SideBar, Header },
+  components: { SideBar, HeaderUser },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,
@@ -63,6 +64,31 @@ export default {
     this.categoryId = this.$route.params.id;
     this.ShowCategory();
   },
+  computed: {
+    getLatestChapterInfo() {
+      const latestChapterInfo = {};
+      this.category.stories.forEach((story) => {
+        if (story.chapters && story.chapters.length > 0) {
+          const reversedChapters = story.chapters.slice().reverse();
+          const latestChapterTime = reversedChapters[0].thoi_gian_dang;
+          const latestChapterNumber = reversedChapters[0].so;
+          const latestChapterId = reversedChapters[0].id;
+          latestChapterInfo[story.id] = {
+            time: this.formatTimeAgo(latestChapterTime),
+            so: latestChapterNumber,
+            id: latestChapterId,
+          };
+        } else {
+          latestChapterInfo[story.id] = {
+            time: "",
+            so: "",
+            id: "",
+          };
+        }
+      });
+      return latestChapterInfo;
+    },
+  },
   methods: {
     async ShowCategory() {
       try {
@@ -76,6 +102,27 @@ export default {
       }
     },
     async clickDetail() {},
+    formatTimeAgo(timestamp) {
+      if (!timestamp || timestamp.length < 6) {
+        return ""; // Trả về một giá trị rỗng nếu timestamp không hợp lệ
+      }
+      const currentDate = new Date();
+      const postDate = new Date(timestamp[0], timestamp[1] - 1, timestamp[2], timestamp[3], timestamp[4], timestamp[5]);
+
+      const timeDifference = currentDate - postDate;
+      const seconds = Math.floor(timeDifference / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (days > 0) {
+        return `${days} ngày trước`;
+      } else if (hours > 0) {
+        return `${hours} giờ trước`;
+      } else {
+        return `${minutes} phút trước`;
+      }
+    },
   },
 };
 </script>
@@ -110,5 +157,19 @@ a {
 .carousel-small .carousel-control-prev-icon::after,
 .carousel-small .carousel-control-next-icon::after {
   content: "";
+}
+
+/* Hiệu ứng khi hover vào ảnh */
+.image-link:hover img {
+  transform: scale(1.1);
+  /* Zoom ảnh lên 110% */
+  transition: transform 0.3s ease;
+  /* Hiệu ứng chuyển đổi mềm mại */
+}
+
+/* Thiết lập hiệu ứng transition cho ảnh */
+.card-body img {
+  transition: transform 0.3s ease;
+  /* Thiết lập transition cho hiệu ứng */
 }
 </style>

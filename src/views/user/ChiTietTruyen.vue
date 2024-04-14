@@ -1,18 +1,17 @@
 <template>
-  <Header />
-  <SideBar />
+  <HeaderUser />
+  <!-- <SideBar /> -->
   <div>
-    <main id="main" class="main">
+    <main id="" class="main" style="margin-top: 10px; margin-left: 103px; margin-right: 100px">
       <div class="chitiettruyen">
         <div class="pagetitle">
           <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">CHI TIẾT</h1>
         </div>
         <!-- Thông tin truyện -->
         <div class="card mb-3">
-          <div class="row g-0">
+          <div class="row g-0 align-items-center" style="margin-top: -12px; margin-bottom: 6px">
             <div class="col-md-4">
-              <img :src="`${this.apiUrl}/${detailTruyen.avt}`" class="img-fluid rounded-3 mt-3 ms-3" alt="..."
-                style="width: 100%; height: 600px" />
+              <img :src="`${this.apiUrl}/${detailTruyen.avt}`" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 100%; height: 600px" />
             </div>
             <div class="col-md-8">
               <div class="card-body ms-3">
@@ -31,11 +30,8 @@
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="yeuthich">
-                  <button v-if="!isFavorite" type="button" class="btn btn-success" @click="postFavorite()"><i
-                      class="bi bi-star me-1"></i> Yêu thích</button>
-                  <button v-if="isFavorite" type="button" class="btn btn-success" @click="deleteFavorite()"><i
-                      class="bi bi-star me-1"></i> Bỏ yêu
-                    thích</button>
+                  <button v-if="!isFavorite" type="button" class="btn btn-success" @click="postFavorite()"><i class="bi bi-star me-1"></i> Yêu thích</button>
+                  <button v-if="isFavorite" type="button" class="btn btn-success" @click="deleteFavorite()"><i class="bi bi-star me-1"></i> Bỏ yêu thích</button>
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="d-flex gap-2">
@@ -75,25 +71,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="fs-8" v-for="chapter in chapters" :key=chapter?.id>
-                <td scope="row" style="font-size: 18px" v-if="currentUser"
-                  @click="addHistory(currentUser.id, truyenId, chapter.id)">
-                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }"
-                    :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black">
-                    Chapter {{ chapter.so }}: {{ chapter.ten }}
-                  </RouterLink>
+              <tr class="fs-8" v-for="chapter in chapters" :key="chapter?.id">
+                <td scope="row" style="font-size: 18px" v-if="currentUser" @click="addHistory(currentUser.id, truyenId, chapter.id)">
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }" :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black"> Chapter {{ chapter.so }}: {{ chapter.ten }} </RouterLink>
                 </td>
                 <td scope="row" style="font-size: 18px" v-else>
-                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }"
-                    :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black">
-                    Chapter {{ chapter.so }}: {{ chapter.ten }}
-                  </RouterLink>
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }" :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black"> Chapter {{ chapter.so }}: {{ chapter.ten }} </RouterLink>
                 </td>
 
-                <td class="col-2 text-center" v-if="currentUser && isChapterRead(chapter.id)"><i
-                    class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
-                <td class="col-2 text-center" v-if="currentUser && !isChapterRead(chapter.id)"><i class="bi bi-eye-fill"
-                    style="font-size: 20px"></i></td>
+                <td class="col-2 text-center" v-if="currentUser && isChapterRead(chapter.id)"><i class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
+                <td class="col-2 text-center" v-if="currentUser && !isChapterRead(chapter.id)"><i class="bi bi-eye-fill" style="font-size: 20px"></i></td>
                 <td class="col-2 text-center">{{ formatTimeAgo(chapter.thoi_gian_dang) }}</td>
                 <td class="col-2 text-center">{{ chapter.view }}</td>
               </tr>
@@ -105,23 +92,21 @@
         <div class="pagetitle" style="margin-top: -18px">
           <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">BÌNH LUẬN</h1>
           <div class="mt-2">
-            <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text"
-              placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
+            <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text" placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
           </div>
           <div class="d-flex justify-content-end mt-1">
             <button @click="addNewComment()" type="button" class="btn btn-success my-1 px-3">Gửi</button>
           </div>
 
           <div class="d-flex w-100" v-for="comment in comments" :key="comment.id">
-            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-1"
-              style="height: 50px; width: 50px" />
+            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-2" style="height: 50px; width: 50px" />
             <div class="nguoibinhluan d-flex flex-column mb-2 w-100 ms-2">
               <div class="">
-                <label for="" class="fw-bold ms-1 text-success">{{ comment?.user.hoten }}</label>
+                <label for="" class="fw-bold ms-1" style="color: green">{{ comment?.user.hoten }}</label>
                 <label for="" class="ms-2" style="font-size: 14px">{{ formatTimeAgo(comment.thoi_gian_dang) }}</label>
               </div>
-              <label for="" class="fw-bold bg-secondary-subtle p-2 rounded-2">{{ comment.noidung }}</label>
-              <a href="" class="ms-2 fs-9 text-danger" style="font-size: 14px">Xoá</a>
+              <label for="" class="bg-secondary-subtle p-2 rounded-2">{{ comment.noidung }}</label>
+              <a href="" class="ms-2 fs-9" style="font-size: 14px; color: red">Xoá</a>
             </div>
           </div>
         </div>
@@ -131,7 +116,6 @@
   </div>
 
   <!-- TOAST -->
-
 </template>
 
 <script>
@@ -139,9 +123,10 @@ import SideBar from "./Sidebar.vue";
 import Header from "../../components/Header.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import HeaderUser from "@/components/HeaderUser.vue";
 export default {
   name: "ChiTietTruyen",
-  components: { SideBar, Header },
+  components: { SideBar, HeaderUser },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,
@@ -176,7 +161,7 @@ export default {
       isFavorite: false,
       chapters: [],
       histories: [],
-      historiesIds: false
+      historiesIds: false,
     };
   },
   mounted() {
@@ -207,16 +192,14 @@ export default {
           const data2 = response.data;
           if (data2) {
             this.isFavorite = true;
-          }
-          else {
+          } else {
             this.isFavorite = false;
           }
         }
       } catch (error) {
         if (error.response && error.response.status == 404) {
           console.log("Người dùng này chưa yêu thích truyện này!");
-        }
-        else {
+        } else {
           console.error("Error fetching favorites data:", error);
         }
       }
@@ -285,7 +268,7 @@ export default {
             confirmButtonColor: "#3085d6",
             confirmButtonText: "OK",
             timer: 1000,
-          })
+          });
         }
       } catch (error) {
         console.error("Error post comment:", error);
@@ -293,9 +276,7 @@ export default {
     },
     async fetchChapters() {
       try {
-        const reponse = await axios.get(
-          this.apiUrl + `/api/chapter/${this.truyenId}`
-        );
+        const reponse = await axios.get(this.apiUrl + `/api/chapter/${this.truyenId}`);
         this.chapters = reponse.data;
         console.log("DANH SÁCH CHƯƠNG CÓ TRONG TRUYỆN NÀY:: ", this.chapters);
         this.chapters.reverse();
@@ -306,20 +287,17 @@ export default {
     async fetchHistory() {
       try {
         if (this.currentUser) {
-          const response = await axios.get(
-            this.apiUrl + `/api/history/get/${this.currentUser.id}/${this.truyenId}`
-          );
+          const response = await axios.get(this.apiUrl + `/api/history/get/${this.currentUser.id}/${this.truyenId}`);
           this.histories = response.data;
           console.log("DANH SÁCH CHƯƠNG ĐÃ ĐỌC BỞI NGƯỜI DÙNG:: ", this.histories);
-          this.historiesIds = this.histories.map(history => history.id);
+          this.historiesIds = this.histories.map((history) => history.id);
           console.log("DANH SÁCH ID CHƯƠNG ĐÃ ĐỌC BỞI NGƯỜI DÙNG:: ", this.historiesIds);
           this.histories.reverse();
         }
       } catch (error) {
         if (error.response && error.response.status == 404) {
           console.log("Người dùng này chưa đọc chương nào trong truyện này!");
-        }
-        else {
+        } else {
           console.error("Error fetching histories data:", error);
         }
       }
@@ -331,16 +309,14 @@ export default {
         } else {
           return true;
         }
-      }
-      else
-        return true;
+      } else return true;
     },
     async addHistory(userId, storyId, chapterId) {
       try {
         console.log("ID USER:: ", userId);
         console.log("ID STORY:: ", storyId);
         console.log("ID STORY:: ", chapterId);
-        await axios.post(this.apiUrl + `/api/history/add/${userId}/${storyId}/${chapterId}`)
+        await axios.post(this.apiUrl + `/api/history/add/${userId}/${storyId}/${chapterId}`);
         console.log("ĐÃ THÊM CHƯƠNG NÀY VÀO LỊCH SỬ CỦA USER:: ");
       } catch (error) {
         console.error("Error adding history:: ", error);
@@ -366,9 +342,8 @@ export default {
       } else {
         return `${minutes} phút trước`;
       }
-    }
+    },
   },
-
 };
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
