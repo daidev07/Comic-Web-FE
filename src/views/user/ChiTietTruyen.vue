@@ -5,13 +5,14 @@
     <main id="" class="main" style="margin-top: 10px; margin-left: 103px; margin-right: 100px">
       <div class="chitiettruyen">
         <div class="pagetitle">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">CHI TIẾT</h1>
+          <h1 class="fw-bold bg-primary p-1 rounded-1 ps-2 text-center">CHI TIẾT</h1>
         </div>
         <!-- Thông tin truyện -->
         <div class="card mb-3">
           <div class="row g-0 align-items-center" style="margin-top: -12px; margin-bottom: 6px">
             <div class="col-md-4">
-              <img :src="`${this.apiUrl}/${detailTruyen.avt}`" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 100%; height: 600px" />
+              <img :src="`${this.apiUrl}/${detailTruyen.avt}`" class="img-fluid rounded-3 mt-3 ms-3" alt="..."
+                style="width: 100%; height: 600px" />
             </div>
             <div class="col-md-8">
               <div class="card-body ms-3">
@@ -30,16 +31,21 @@
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="yeuthich">
-                  <button v-if="!isFavorite" type="button" class="btn btn-success" @click="postFavorite()"><i class="bi bi-star me-1"></i> Yêu thích</button>
-                  <button v-if="isFavorite" type="button" class="btn btn-success" @click="deleteFavorite()"><i class="bi bi-star me-1"></i> Bỏ yêu thích</button>
+                  <button v-if="!isFavorite" type="button" class="btn btn-success" @click="postFavorite()"><i
+                      class="bi bi-star me-1"></i> Yêu thích</button>
+                  <button v-if="isFavorite" type="button" class="btn btn-success" @click="deleteFavorite()"><i
+                      class="bi bi-star me-1"></i> Bỏ yêu thích</button>
                 </div>
                 <h1 class="card-title fw-bold"></h1>
                 <div class="d-flex gap-2">
                   <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapters[chapters.length - 1]?.id}` }">
-                    <button type="button" class="btn btn-danger">Đọc từ đầu</button>
+                    <button type="button" class="btn btn-danger"
+                      @click="dauCuoiClick(chapters[chapters.length - 1]?.id)">Đọc từ
+                      đầu</button>
                   </RouterLink>
                   <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapters[0]?.id}` }">
-                    <button type="button" class="btn btn-primary">Đọc chương mới nhất</button>
+                    <button type="button" class="btn btn-primary" @click="dauCuoiClick(chapters[0]?.id)">Đọc chương mới
+                      nhất</button>
                   </RouterLink>
                 </div>
               </div>
@@ -48,7 +54,7 @@
         </div>
         <!-- End thông tin truyện -->
         <div class="pagetitle" style="margin-top: -4px">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">NỘI DUNG TRUYỆN</h1>
+          <h1 class="fw-bold bg-primary p-1 rounded-1 ps-2 text-center">NỘI DUNG TRUYỆN</h1>
         </div>
         <!-- Mô tả nội dung -->
         <div class="card p-2">
@@ -56,7 +62,7 @@
         </div>
         <!-- End Mô tả nội dung -->
         <div class="pagetitle" style="margin-top: -18px">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">DANH SÁCH CHƯƠNG</h1>
+          <h1 class="fw-bold p-1 rounded-1 ps-2 text-center bg-primary">DANH SÁCH CHƯƠNG</h1>
         </div>
         <!-- Danh sách chương -->
         <div class="card p-2">
@@ -65,22 +71,26 @@
             <thead>
               <tr class="fs-4">
                 <th class="fw-bold" scope="col">Tên chương</th>
-                <th class="fw-bold col-2 text-center" scope="col" v-if="currentUser">Trạng thái</th>
+                <th class="fw-bold col-2 text-center" scope="col">Trạng thái</th>
                 <th class="fw-bold col-2 text-center" scope="col">Cập nhật</th>
                 <th class="fw-bold col-2 text-center" scope="col">Lượt xem</th>
               </tr>
             </thead>
             <tbody>
               <tr class="fs-8" v-for="chapter in chapters" :key="chapter?.id">
-                <td scope="row" style="font-size: 18px" v-if="currentUser" @click="addHistory(currentUser.id, truyenId, chapter.id)">
-                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }" :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black"> Chapter {{ chapter.so }}: {{ chapter.ten }} </RouterLink>
-                </td>
-                <td scope="row" style="font-size: 18px" v-else>
-                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }" :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black"> Chapter {{ chapter.so }}: {{ chapter.ten }} </RouterLink>
+                <td scope="row" style="font-size: 18px" @click="clickChapter(chapter.id)">
+                  <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }"
+                    :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black"> Chapter {{ chapter.so }}: {{
+                chapter.ten }} </RouterLink>
                 </td>
 
-                <td class="col-2 text-center" v-if="currentUser && isChapterRead(chapter.id)"><i class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
-                <td class="col-2 text-center" v-if="currentUser && !isChapterRead(chapter.id)"><i class="bi bi-eye-fill" style="font-size: 20px"></i></td>
+                <td class="col-2 text-center" v-if="currentUser && isChapterRead(chapter.id)"><i
+                    class="bi bi-eye-slash-fill" style="font-size: 20px"></i></td>
+                <td class="col-2 text-center" v-if="currentUser && !isChapterRead(chapter.id)"><i class="bi bi-eye-fill"
+                    style="font-size: 20px"></i></td>
+                <td class="col-2 text-center" v-if="!currentUser">
+                  <RouterLink to="/login"> Đăng nhập để xem </RouterLink>
+                </td>
                 <td class="col-2 text-center">{{ formatTimeAgo(chapter.thoi_gian_dang) }}</td>
                 <td class="col-2 text-center">{{ chapter.view }}</td>
               </tr>
@@ -90,16 +100,18 @@
         </div>
         <!-- End Danh sách chương -->
         <div class="pagetitle" style="margin-top: -18px">
-          <h1 class="fw-bold bg-danger-subtle p-1 rounded-1 ps-2 text-center">BÌNH LUẬN</h1>
+          <h1 class="fw-bold p-1 rounded-1 ps-2 text-center bg-primary">BÌNH LUẬN</h1>
           <div class="mt-2">
-            <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text" placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
+            <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text"
+              placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
           </div>
           <div class="d-flex justify-content-end mt-1">
             <button @click="addNewComment()" type="button" class="btn btn-success my-1 px-3">Gửi</button>
           </div>
 
           <div class="d-flex w-100" v-for="comment in comments" :key="comment.id">
-            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-2" style="height: 50px; width: 50px" />
+            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-2"
+              style="height: 50px; width: 50px" />
             <div class="nguoibinhluan d-flex flex-column mb-2 w-100 ms-2">
               <div class="">
                 <label for="" class="fw-bold ms-1" style="color: green">{{ comment?.user.hoten }}</label>
@@ -129,6 +141,7 @@ export default {
   components: { SideBar, HeaderUser },
   data() {
     return {
+      localUrl: "http://localhost:7777",
       apiUrl: process.env.VUE_APP_URL,
       truyenId: null,
       detailTruyen: {
@@ -311,15 +324,43 @@ export default {
         }
       } else return true;
     },
+    async tangView(chapterId) {
+      try {
+        const response = await axios.get(this.apiUrl + `/api/chapter/get/${chapterId}`)
+        const chapterData = response.data;
+        chapterData.view += 1
+        await axios.put(this.apiUrl + `/api/chapter/increase-view/${chapterId}`, chapterData)
+        console.log("ĐÃ TĂNG SỐ LƯỢT XEM CHO CHƯƠNG");
+      } catch (error) {
+        console.error("Error increase view:: ", error);
+      }
+    },
+    async clickChapter(chapterId) {
+      try {
+        if (this.currentUser) {
+          await this.addHistory(this.currentUser.id, this.truyenId, chapterId);
+        }
+        this.tangView(chapterId);
+      } catch (error) {
+        console.error("Error clickChapter:: ", error);
+      }
+    },
     async addHistory(userId, storyId, chapterId) {
       try {
-        console.log("ID USER:: ", userId);
-        console.log("ID STORY:: ", storyId);
-        console.log("ID STORY:: ", chapterId);
         await axios.post(this.apiUrl + `/api/history/add/${userId}/${storyId}/${chapterId}`);
-        console.log("ĐÃ THÊM CHƯƠNG NÀY VÀO LỊCH SỬ CỦA USER:: ");
+        console.log("ĐÃ THÊM CHƯƠNG NÀY VÀO LỊCH SỬ CỦA USER");
       } catch (error) {
         console.error("Error adding history:: ", error);
+      }
+    },
+    async dauCuoiClick(chapterId) {
+      try {
+        if (this.currentUser) {
+          await this.addHistory(this.currentUser.id, this.truyenId, chapterId)
+        }
+        this.tangView(chapterId);
+      } catch (error) {
+        console.error("Error daucuoi button:: ", error);
       }
     },
     formatTimeAgo(timestamp) {

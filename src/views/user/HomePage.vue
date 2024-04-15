@@ -12,9 +12,12 @@
             <!-- Slides with captions -->
             <div id="carouselExampleCaptions" class="carousel slide carousel-small" data-bs-ride="carousel">
               <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+                  aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
+                  aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
+                  aria-label="Slide 3"></button>
               </div>
               <div class="carousel-inner">
                 <div class="carousel-item active bg-danger-subtle">
@@ -31,17 +34,54 @@
                 </div>
               </div>
 
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
             </div>
             <!-- End Slides with captions -->
           </div>
+        </div>
+      </div>
+
+      <div class="top10">
+        <div class="pagetitle">
+          <h1 class="fw-bold mb-2"><i class="bi bi-stars me-2"></i>TOP TRUYỆN ĐỌC NHIỀU</h1>
+          <div class="swiper-container overflow-x-hidden position-relative">
+            <div class="swiper-wrapper">
+              <!-- Loop through stories -->
+              <div class="swiper-slide" v-for="story in topViewStories" :key="story.id">
+                <div class="card">
+                  <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
+                    <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
+                      <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
+                        style="height: 300px" @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
+                      <div class="text-center mt-3">
+                        {{ story.ten }}
+                      </div>
+                    </RouterLink>
+                    <div class="text-center d-flex align-items-center justify-content-center">
+                      <i class="bi bi-eye-fill me-2" style="font-size: 20px"></i>
+                      <div style="font-size: 20px;">
+                        {{ story.view }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End Loop -->
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+          <!-- Add Navigation Buttons -->
+
         </div>
       </div>
 
@@ -54,13 +94,16 @@
           <!-- item -->
           <div class="card mb-0" v-for="story in stories" :key="story.id">
             <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
-              <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px" />
+              <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px"
+                  @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
+                <div class="text-center mt-3">
+                  {{ story.ten }}
+                </div>
               </RouterLink>
-
-              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{ story.ten }} </RouterLink>
               <div class="d-flex justify-content-between">
-                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
+                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }">
+                  Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
                 <span>{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
             </div>
@@ -71,12 +114,20 @@
       </div>
     </main>
     <!-- End #main -->
+
+    <div class="image-overlay" v-show="showOverlay" :style="{ top: overlayTop + 'px', left: overlayLeft + 'px' }">
+      <!-- Nội dung hộp thoại -->
+      <div class="overlay-content">
+        <!-- Đặt nội dung của hộp thoại ở đây -->
+        Your overlay content here
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import SideBar from "./Sidebar.vue";
-import Header from "../../components/Header.vue";
+import Swiper from 'swiper/bundle';
 import HeaderUser from "../../components/HeaderUser.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -94,7 +145,8 @@ export default {
           tacgia: null,
           gioithieu: null,
           thoi_gian_dang: null,
-          view: null,
+          chapters: [],
+          view: null
         },
       ],
       storiesolds: [],
@@ -102,12 +154,38 @@ export default {
         ten_truyen: null,
         id_truyen: "0",
       },
+
+
+      hoveredImg: false
     };
   },
   mounted() {
     this.ShowStories();
+    new Swiper('.swiper-container', {
+      slidesPerView: '6',
+      spaceBetween: 10,
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
   },
   computed: {
+    topViewStories() {
+      return this.stories.map(story => {
+        const totalViews = story.chapters.reduce((acc, chapter) => acc + chapter.view, 0);
+        return { ...story, view: totalViews };
+      }).sort((a, b) => b.view - a.view).slice(0, 10);
+    },
     getLatestChapterInfo() {
       const latestChapterInfo = {};
       this.stories.forEach((story) => {
@@ -220,5 +298,29 @@ a {
 .card-body img {
   transition: transform 0.3s ease;
   /* Thiết lập transition cho hiệu ứng */
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  /* Ẩn mặc định */
+  /* Thiết lập kích thước, màu sắc và hiệu ứng của hộp thoại */
+}
+
+/* Hiển thị hộp thoại khi hover vào ảnh */
+.card-img-top:hover+.image-overlay {
+  display: block;
+}
+
+.swiper-container {
+  width: 100%;
+}
+.swiper-button-prev  {
+  color: grey;
+}
+.swiper-button-next{
+  color: grey;
 }
 </style>
