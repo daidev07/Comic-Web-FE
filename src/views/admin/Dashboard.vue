@@ -356,7 +356,6 @@ export default {
           avt: null,
           ten: null,
           tacgia: null,
-          idTheLoais: [],
           gioithieu: null
         };
         this.newChapter = {
