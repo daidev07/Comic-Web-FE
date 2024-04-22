@@ -2,7 +2,7 @@
   <HeaderUser />
   <!-- <SideBar /> -->
   <div>
-    <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
+    <main id="" class="main" style="margin-top: 32px; margin-left: 380px; margin-right: 380px">
       <div class="truyenmoicapnhat">
         <div class="pagetitle">
           <h1 class="fw-bold">DANH SÁCH YÊU THÍCH</h1>
@@ -14,15 +14,15 @@
           </div>
           <!-- item -->
           <div v-else class="card mb-0" v-for="story in favoriteStories" :key="story.id">
-            <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
+            <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px" />
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" />
               </RouterLink>
 
               <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{ story.ten }} </RouterLink>
               <div class="d-flex justify-content-between">
                 <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
-                <span>{{ getLatestChapterInfo[story.id].time }}</span>
+                <span style="font-size: 10px; margin-top: 6px">{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
             </div>
           </div>
