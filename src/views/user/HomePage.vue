@@ -9,30 +9,28 @@
             <!-- Slides with captions -->
             <div id="carouselExampleCaptions" class="carousel slide carousel-small" data-bs-ride="carousel">
               <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" v-for="(slide, index) in slides" :key="index"
+                  data-bs-target="#carouselExampleCaptions" :data-bs-slide-to="index" :class="{ active: index === 0 }"
+                  aria-current="true" :aria-label="'Slide ' + (index + 1)"></button>
               </div>
               <div class="carousel-inner">
-                <div class="carousel-item active bg-danger-subtle">
-                  <img src="../../../public/assets/truyen/1.jpg" class="d-block w-100" alt="..." />
-                  <div class="carousel-caption d-none d-md-block"></div>
-                </div>
-                <div class="carousel-item bg-info-subtle">
-                  <img src="../../../public/assets/truyen/2.jpg" class="d-block w-100" alt="..." />
-                  <div class="carousel-caption d-none d-md-block"></div>
-                </div>
-                <div class="carousel-item bg-primary-subtle">
-                  <img src="../../../public/assets/truyen/3.jpg" class="d-block w-100" alt="..." />
-                  <div class="carousel-caption d-none d-md-block"></div>
+                <div class="carousel-item bg-danger-subtle" v-for="(slide, index) in slides" :key="index"
+                  :class="{ active: index === 0 }">
+                  <img :src="`${this.apiUrl}/${slide.story.avt}`" class="d-block w-100" alt="..." />
+                  <div class="carousel-caption d-none d-md-block fs-2" style="text-shadow: -1px -1px 0 rgba(0,
+                    0, 0, 1), 1px -1px 0 rgba(0, 0, 0, 1), -1px 1px 0 rgba(0, 0, 0, 1), 1px 1px 0 rgba(0, 0,
+                    0, 1);">{{
+                  slide.story.ten }}</div>
                 </div>
               </div>
 
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
@@ -52,7 +50,8 @@
                 <div class="card">
                   <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
                     <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
-                      <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
+                      <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
+                        style="height: 220px" @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
                       <div class="text-center mt-3">
                         {{ story.ten }}
                       </div>
@@ -85,13 +84,15 @@
           <div class="card mb-0" v-for="story in stories" :key="story.id">
             <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" />
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
+                  style="height: 220px" />
                 <div class="text-center mt-3" @mouseover="showOverlay = true" @mouseleave="showOverlay = false">
                   {{ story.ten }}
                 </div>
               </RouterLink>
               <div class="d-flex justify-content-between">
-                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
+                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }">
+                  Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
                 <span style="font-size: 10px; margin-top: 6px">{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
             </div>
@@ -162,6 +163,7 @@ export default {
         prevEl: ".swiper-button-prev",
       },
     });
+    this.FetchSlides();
   },
   computed: {
     topViewStories() {
@@ -198,6 +200,15 @@ export default {
     },
   },
   methods: {
+    async FetchSlides() {
+      try {
+        const response = await axios.get(this.apiUrl + "/api/slide/getAll");
+        this.slides = response.data;
+        console.log("DỮ LIỆU SLIDES:: ", this.slides);
+      } catch (error) {
+        console.error("Error fetching slides data:", error);
+      }
+    },
     async ShowStories() {
       try {
         const reponse = await axios.get("http://localhost:8000/api/story");
@@ -295,7 +306,7 @@ a {
 } */
 
 /* Hiển thị hộp thoại khi hover vào ảnh */
-.card-img-top:hover + .image-overlay {
+.card-img-top:hover+.image-overlay {
   display: block;
 }
 

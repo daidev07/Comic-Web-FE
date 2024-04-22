@@ -7,8 +7,8 @@ import ChapterForStory from "@/views/admin/ChapterForStory.vue";
 import Register from "@/components/Register.vue";
 import TheLoai from "@/views/admin/TheLoai.vue";
 import User from "@/views/admin/User.vue";
+import Slide from "@/views/admin/Slide.vue";
 import TheLoaiTruyen from "@/views/user/TheLoaiTruyen.vue";
-import TopTruyen from "@/views/user/TopTruyen.vue";
 import LichSu from "@/views/user/LichSu.vue";
 import YeuThich from "@/views/user/YeuThich.vue";
 import ChiTietTruyen from "@/views/user/ChiTietTruyen.vue";
@@ -47,6 +47,7 @@ const routes = [
         component: TheLoai,
       },
       { path: "user", name: "user", component: User },
+      { path: "slide", name: "slide", component: Slide },
       { path: "chi-tiet/:id", name: "chi-tiet", component: ChapterForStory },
     ],
   },
@@ -55,27 +56,6 @@ const routes = [
     name: "theloaitruyen",
     component: TheLoaiTruyen,
   },
-  // {
-  //   path: "/top",
-  //   name: "toptruyen",
-  //   children: [
-  //     {
-  //       path: "ngay",
-  //       name: "topngay",
-  //       component: TopTruyen,
-  //     },
-  //     {
-  //       path: "tuan",
-  //       name: "toptuan",
-  //       component: TopTruyen,
-  //     },
-  //     {
-  //       path: "thang",
-  //       name: "topthang",
-  //       component: TopTruyen,
-  //     },
-  //   ],
-  // },
   {
     path: "/lichsu",
     name: "lichsu",
