@@ -2,19 +2,16 @@
   <HeaderUser />
   <!-- <SideBar /> -->
   <div>
-    <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
+    <main id="" class="main" style="margin-top: 32px; margin-left: 380px; margin-right: 380px">
       <div class="truyendecu">
         <div class="card">
           <div class="card-body">
             <!-- Slides with captions -->
             <div id="carouselExampleCaptions" class="carousel slide carousel-small" data-bs-ride="carousel">
               <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
-                  aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
-                  aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
-                  aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
               </div>
               <div class="carousel-inner">
                 <div class="carousel-item active bg-danger-subtle">
@@ -31,13 +28,11 @@
                 </div>
               </div>
 
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
-                data-bs-slide="prev">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
-                data-bs-slide="next">
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
@@ -55,17 +50,16 @@
               <!-- Loop through stories -->
               <div class="swiper-slide" v-for="story in topViewStories" :key="story.id">
                 <div class="card">
-                  <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
+                  <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
                     <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
-                      <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
-                        style="height: 300px" @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
+                      <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
                       <div class="text-center mt-3">
                         {{ story.ten }}
                       </div>
                     </RouterLink>
                     <div class="text-center d-flex align-items-center justify-content-center">
                       <i class="bi bi-eye-fill me-2" style="font-size: 20px"></i>
-                      <div style="font-size: 20px;">
+                      <div style="font-size: 20px">
                         {{ story.view }}
                       </div>
                     </div>
@@ -78,11 +72,10 @@
             <div class="swiper-button-next"></div>
           </div>
           <!-- Add Navigation Buttons -->
-
         </div>
       </div>
 
-      <div class="truyenmoicapnhat" style=" position: relative">
+      <div class="truyenmoicapnhat" style="position: relative">
         <div class="pagetitle">
           <h1 class="fw-bold">TRUYỆN MỚI CẬP NHẬT</h1>
         </div>
@@ -90,20 +83,17 @@
         <div class="d-flex flex-wrap" style="gap: 10px">
           <!-- item -->
           <div class="card mb-0" v-for="story in stories" :key="story.id">
-            <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6);">
+            <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
-                  style="height: 300px" />
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" />
                 <div class="text-center mt-3" @mouseover="showOverlay = true" @mouseleave="showOverlay = false">
                   {{ story.ten }}
                 </div>
               </RouterLink>
               <div class="d-flex justify-content-between">
-                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }">
-                  Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
-                <span>{{ getLatestChapterInfo[story.id].time }}</span>
+                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
+                <span style="font-size: 10px; margin-top: 6px">{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
-
             </div>
           </div>
           <!-- End item -->
@@ -118,14 +108,12 @@
       </div>
     </main>
     <!-- End #main -->
-
-
   </div>
 </template>
 
 <script>
 import SideBar from "./Sidebar.vue";
-import Swiper from 'swiper/bundle';
+import Swiper from "swiper/bundle";
 import HeaderUser from "../../components/HeaderUser.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -144,7 +132,7 @@ export default {
           gioithieu: null,
           thoi_gian_dang: null,
           chapters: [],
-          view: null
+          view: null,
         },
       ],
       storiesolds: [],
@@ -152,13 +140,13 @@ export default {
         ten_truyen: null,
         id_truyen: "0",
       },
-      showOverlay: false
+      showOverlay: false,
     };
   },
   mounted() {
     this.ShowStories();
-    new Swiper('.swiper-container', {
-      slidesPerView: '6',
+    new Swiper(".swiper-container", {
+      slidesPerView: "6",
       spaceBetween: 10,
       loop: true,
       autoplay: {
@@ -166,21 +154,24 @@ export default {
         disableOnInteraction: false,
       },
       pagination: {
-        el: '.swiper-pagination',
+        el: ".swiper-pagination",
         clickable: true,
       },
       navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
       },
     });
   },
   computed: {
     topViewStories() {
-      return this.stories.map(story => {
-        const totalViews = story.chapters.reduce((acc, chapter) => acc + chapter.view, 0);
-        return { ...story, view: totalViews };
-      }).sort((a, b) => b.view - a.view).slice(0, 10);
+      return this.stories
+        .map((story) => {
+          const totalViews = story.chapters.reduce((acc, chapter) => acc + chapter.view, 0);
+          return { ...story, view: totalViews };
+        })
+        .sort((a, b) => b.view - a.view)
+        .slice(0, 10);
     },
     getLatestChapterInfo() {
       const latestChapterInfo = {};
@@ -304,7 +295,7 @@ a {
 } */
 
 /* Hiển thị hộp thoại khi hover vào ảnh */
-.card-img-top:hover+.image-overlay {
+.card-img-top:hover + .image-overlay {
   display: block;
 }
 

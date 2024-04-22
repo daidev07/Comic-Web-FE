@@ -2,7 +2,7 @@
   <HeaderUser />
   <!-- <SideBar /> -->
   <div>
-    <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
+    <main id="" class="main" style="margin-top: 32px; margin-left: 380px; margin-right: 380px">
       <div class="truyenmoicapnhat">
         <div class="pagetitle">
           <h1 class="fw-bold">LỊCH SỬ ĐỌC TRUYỆN</h1>
@@ -15,17 +15,17 @@
           </div>
           <!-- item -->
           <div v-else class="card mb-0" v-for="historyStory in historyStories" :key="historyStory.id">
-            <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
+            <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${historyStory.story.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${historyStory.story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px" />
+                <img :src="`${this.apiUrl}/${historyStory.story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" />
                 <a class="card-text text-center d-block mt-2">
                   {{ historyStory.ten }}
                 </a>
               </RouterLink>
               <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${historyStory.story.id}` }"> {{ historyStory.story.ten }} </RouterLink>
               <div class="d-flex justify-content-between">
-                <a>Lần cuối đọc</a>
-                <span>{{ formatTimeAgo(historyStory.lan_cuoi_doc) }}</span>
+                <a style="font-size: 13px">Lần cuối đọc</a>
+                <span style="font-size: 10px; margin-top: 3px">{{ formatTimeAgo(historyStory.lan_cuoi_doc) }}</span>
               </div>
             </div>
           </div>

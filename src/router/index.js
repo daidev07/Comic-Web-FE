@@ -14,6 +14,7 @@ import YeuThich from "@/views/user/YeuThich.vue";
 import ChiTietTruyen from "@/views/user/ChiTietTruyen.vue";
 import Reading from "@/views/user/Reading.vue";
 import TimKiem from "@/views/user/TimKiem.vue";
+import ThongTinCaNhan from "@/views/user/UserInfo.vue";
 
 const routes = [
   {
@@ -94,6 +95,11 @@ const routes = [
     path: "/404",
     name: "error",
     component: ErrorPage,
+  },
+  {
+    path: "/thongtincanhan",
+    name: "thongtincanhan",
+    component: ThongTinCaNhan,
   },
   {
     path: "/chitiet/:id",
