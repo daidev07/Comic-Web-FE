@@ -14,15 +14,18 @@
         <div class="col-sm-6 offset-sm-2 offset-md-0 col-lg-5 d-none d-lg-block">
           <div class="search-bar border rounded-2 px-3 border-dark-subtle">
             <form id="search-form" class="text-center d-flex align-items-center" action="" method="">
-              <input type="text" class="form-control border-0 bg-transparent" v-model="searchTerm" placeholder="Tìm kiếm" />
+              <input type="text" class="form-control border-0 bg-transparent" v-model="searchTerm"
+                placeholder="Tìm kiếm" />
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" @click="handleSearch">
-                <path fill="currentColor" d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
+                <path fill="currentColor"
+                  d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z" />
               </svg>
             </form>
           </div>
         </div>
 
-        <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
+        <div
+          class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
           <div class="support-box text-end d-none d-xl-block">
             <span class="fs-6 secondary-font text-muted">Phone</span>
             <h5 class="mb-0">+980-34984089</h5>
@@ -55,46 +58,42 @@
             </li>
 
             <li>
-              <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart">
+              <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
+                aria-controls="offcanvasCart">
                 <iconify-icon icon="mdi:cart" class="fs-4 position-relative"></iconify-icon>
                 <span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2"> 03 </span>
               </a>
             </li>
 
             <li>
-              <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch" aria-controls="offcanvasSearch">
+              <a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"
+                aria-controls="offcanvasSearch">
                 <iconify-icon icon="tabler:search" class="fs-4"></iconify-icon>
               </a>
             </li>
           </ul>
         </div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-          <div class="offcanvas-header justify-content-center">
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
 
           <div class="offcanvas-body justify-content-between">
-            <select class="filter-categories border-0 mb-0 me-5">
-              <option>Shop by Category</option>
-              <option>Clothes</option>
-              <option>Food</option>
-              <option>Food</option>
-              <option>Toy</option>
-            </select>
 
             <ul class="navbar-nav menu-list list-unstyled d-flex gap-md-3 mb-0">
-              <li class="nav-item" @mouseenter="hoveredItem = 1" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 1 ? 'red' : '' }">
+              <li class="nav-item" @mouseenter="hoveredItem = 1" @mouseleave="hoveredItem = 0"
+                :style="{ backgroundColor: hoveredItem === 1 ? 'red' : '' }">
                 <RouterLink class="nav-link" :to="{ path: '/' }">
                   <span>Trang chủ</span>
                 </RouterLink>
               </li>
-              <li class="nav-item dropdown" @mouseenter="hoveredItem = 2" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 2 ? 'red' : '' }">
-                <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown" aria-expanded="false">Thể loại</a>
+              <li class="nav-item dropdown" @mouseenter="hoveredItem = 2" @mouseleave="hoveredItem = 0"
+                :style="{ backgroundColor: hoveredItem === 2 ? 'red' : '' }">
+                <a class="nav-link dropdown-toggle" role="button" id="pages" data-bs-toggle="dropdown"
+                  aria-expanded="false">Thể loại</a>
                 <ul class="dropdown-menu" aria-labelledby="pages">
                   <li v-for="category in categories" :key="category.id" @click="reload()">
                     <RouterLink class="dropdown-item" :to="{ path: `/theloaitruyen/${category.id}` }">
@@ -103,14 +102,16 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-item" @click="checkLogIn()" @mouseenter="hoveredItem = 3" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 3 ? 'red' : '' }">
+              <li class="nav-item" @click="checkLogIn()" @mouseenter="hoveredItem = 3" @mouseleave="hoveredItem = 0"
+                :style="{ backgroundColor: hoveredItem === 3 ? 'red' : '' }">
                 <RouterLink class="nav-link" :to="{ path: '/lichsu' }">
                   <span>Lịch sử</span>
                 </RouterLink>
               </li>
               <!-- End Lịch sử -->
 
-              <li class="nav-item" @click="checkLogIn()" @mouseenter="hoveredItem = 4" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 4 ? 'red' : '' }">
+              <li class="nav-item" @click="checkLogIn()" @mouseenter="hoveredItem = 4" @mouseleave="hoveredItem = 0"
+                :style="{ backgroundColor: hoveredItem === 4 ? 'red' : '' }">
                 <RouterLink class="nav-link" :to="{ path: '/yeuthich' }">
                   <span>Danh sách yêu thích</span>
                 </RouterLink>
@@ -122,7 +123,8 @@
               <ul class="d-flex justify-content-end list-unstyled m-0">
                 <li class="nav-item dropdown pe-3 profileUser" v-if="isLoggedIn">
                   <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px" />
+                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"
+                      style="width: 50px; height: 50px" />
                     <span class="d-none d-md-block dropdown-toggle ps-2">{{ this.currentUser.hoten }}</span>
                   </a>
 
@@ -177,7 +179,8 @@
 
                 <li class="dangnhap" v-if="!isLoggedIn">
                   <RouterLink :to="{ path: '/login' }">
-                    <button type="button" class="btn btn-outline-primary mb-1" style="height: 100%; padding: 10px !important">Đăng nhập</button>
+                    <button type="button" class="btn btn-outline-primary mb-1"
+                      style="height: 100%; padding: 10px !important">Đăng nhập</button>
                   </RouterLink>
                 </li>
               </ul>
@@ -278,12 +281,15 @@ export default {
 </script>
 <style>
 .nav-item:hover {
-  cursor: pointer; /* Đổi icon chuột khi hover vào */
+  cursor: pointer;
+  /* Đổi icon chuột khi hover vào */
 }
 
 /* CSS cho hiệu ứng hover */
 svg:hover {
-  color: #007bff; /* Thay đổi màu fill khi hover */
-  cursor: pointer; /* Thay đổi kiểu con trỏ khi hover */
+  color: #007bff;
+  /* Thay đổi màu fill khi hover */
+  cursor: pointer;
+  /* Thay đổi kiểu con trỏ khi hover */
 }
 </style>

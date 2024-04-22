@@ -4,9 +4,6 @@
   <div>
     <main id="" class="main" style="margin-top: 32px; margin-left: 103px; margin-right: 100px">
       <div class="truyendecu">
-        <div class="pagetitle">
-          <h1 class="fw-bold">TRUYỆN ĐỀ CỬ</h1>
-        </div>
         <div class="card">
           <div class="card-body">
             <!-- Slides with captions -->
@@ -85,7 +82,7 @@
         </div>
       </div>
 
-      <div class="truyenmoicapnhat">
+      <div class="truyenmoicapnhat" style=" position: relative">
         <div class="pagetitle">
           <h1 class="fw-bold">TRUYỆN MỚI CẬP NHẬT</h1>
         </div>
@@ -93,11 +90,11 @@
         <div class="d-flex flex-wrap" style="gap: 10px">
           <!-- item -->
           <div class="card mb-0" v-for="story in stories" :key="story.id">
-            <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6)">
+            <div class="card-body col-lg-2" style="width: calc((1700px - 50px) / 6);">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 300px"
-                  @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
-                <div class="text-center mt-3">
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
+                  style="height: 300px" />
+                <div class="text-center mt-3" @mouseover="showOverlay = true" @mouseleave="showOverlay = false">
                   {{ story.ten }}
                 </div>
               </RouterLink>
@@ -106,22 +103,23 @@
                   Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
                 <span>{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
+
             </div>
           </div>
           <!-- End item -->
         </div>
+        <!-- <div class="image-overlay bg-white" v-show="showOverlay"
+          :style="{ top: 122 + 'px', left: 200 + 'px', zIndex: 99, position: 'absolute' }">
+          <div class="overlay-content">
+            Your overlay content here
+          </div>
+        </div> -->
         <!-- End list item -->
       </div>
     </main>
     <!-- End #main -->
 
-    <div class="image-overlay" v-show="showOverlay" :style="{ top: overlayTop + 'px', left: overlayLeft + 'px' }">
-      <!-- Nội dung hộp thoại -->
-      <div class="overlay-content">
-        <!-- Đặt nội dung của hộp thoại ở đây -->
-        Your overlay content here
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -154,9 +152,7 @@ export default {
         ten_truyen: null,
         id_truyen: "0",
       },
-
-
-      hoveredImg: false
+      showOverlay: false
     };
   },
   mounted() {
@@ -300,14 +296,12 @@ a {
   /* Thiết lập transition cho hiệu ứng */
 }
 
-.image-overlay {
+/* .image-overlay {
   position: absolute;
   top: 0;
   left: 0;
   display: none;
-  /* Ẩn mặc định */
-  /* Thiết lập kích thước, màu sắc và hiệu ứng của hộp thoại */
-}
+} */
 
 /* Hiển thị hộp thoại khi hover vào ảnh */
 .card-img-top:hover+.image-overlay {
@@ -317,10 +311,12 @@ a {
 .swiper-container {
   width: 100%;
 }
-.swiper-button-prev  {
+
+.swiper-button-prev {
   color: grey;
 }
-.swiper-button-next{
+
+.swiper-button-next {
   color: grey;
 }
 </style>

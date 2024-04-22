@@ -382,8 +382,14 @@ a.categories-item:hover iconify-icon.category-icon {
   border: 1px solid var(--bs-body-color);
   background-color: transparent;
   opacity: 1;
-  width: var(--swiper-pagination-bullet-width, var(--swiper-pagination-bullet-size, 15px));
-  height: var(--swiper-pagination-bullet-height, var(--swiper-pagination-bullet-size, 15px));
+  width: var(
+    --swiper-pagination-bullet-width,
+    var(--swiper-pagination-bullet-size, 15px)
+  );
+  height: var(
+    --swiper-pagination-bullet-height,
+    var(--swiper-pagination-bullet-size, 15px)
+  );
 }
 
 .swiper-pagination-bullet.swiper-pagination-bullet-active {
@@ -392,7 +398,8 @@ a.categories-item:hover iconify-icon.category-icon {
 }
 
 .swiper-horizontal > .swiper-pagination-bullets .swiper-pagination-bullet,
-.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+.swiper-pagination-horizontal.swiper-pagination-bullets
+  .swiper-pagination-bullet {
   margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 8px);
 }
 
@@ -651,4 +658,9 @@ Single Product section style start
 .nav-pills .show > .nav-link {
   color: var(--light-color);
   background-color: var(--accent-color);
+}
+
+input,
+textarea {
+  text-transform: none !important;
 }
