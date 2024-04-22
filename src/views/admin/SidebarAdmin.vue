@@ -21,7 +21,13 @@
       <li class="nav-item">
         <RouterLink class="nav-link collapsed" :to="{ path: '/admin/user' }">
           <i class="bi bi-person"></i>
-          <span>User</span>
+          <span>Người dùng</span>
+        </RouterLink>
+      </li>
+      <li class="nav-item">
+        <RouterLink class="nav-link collapsed" :to="{ path: '/admin/slide' }">
+          <i class="bi bi-card-image"></i>
+          <span>Slide</span>
         </RouterLink>
       </li>
       <!-- End Favourite -->
