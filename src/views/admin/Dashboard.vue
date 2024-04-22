@@ -421,8 +421,8 @@ export default {
       this.selected = this.stories.find(story => story.id === strId)
       const deleteStoryId = this.selected.id
       swal.fire({
-        title: "Bạn muốn xóa?",
-        text: "Bạn có chắc chắn muốn xóa truyện không?",
+        title: "Bạn muốn xóa truyện?",
+        text: "Xóa truyện sẽ xóa tất cả chương, bình luận, lịch sử, yêu thích của người dùng. Bạn có chắc muốn xóa không?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
