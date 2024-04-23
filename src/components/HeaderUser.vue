@@ -91,14 +91,14 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-item"  @mouseenter="hoveredItem = 3" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 3 ? 'red' : '' }">
+              <li class="nav-item" @mouseenter="hoveredItem = 3" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 3 ? 'red' : '' }">
                 <RouterLink class="nav-link" :to="{ path: '/lichsu' }">
                   <span>Lịch sử</span>
                 </RouterLink>
               </li>
               <!-- End Lịch sử -->
 
-              <li class="nav-item"  @mouseenter="hoveredItem = 4" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 4 ? 'red' : '' }">
+              <li class="nav-item" @mouseenter="hoveredItem = 4" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 4 ? 'red' : '' }">
                 <RouterLink class="nav-link" :to="{ path: '/yeuthich' }">
                   <span>Danh sách yêu thích</span>
                 </RouterLink>
@@ -110,7 +110,7 @@
               <ul class="d-flex justify-content-end list-unstyled m-0">
                 <li class="nav-item dropdown pe-3 profileUser" v-if="isLoggedIn">
                   <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img v-if="!currentUser.avt" src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px"/>
+                    <img v-if="!currentUser.avt" src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px" />
                     <img v-else :src="apiUrl + '/' + currentUser.avt" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px" />
                     <span class="d-none d-md-block dropdown-toggle ps-2">{{ this.currentUser.hoten }}</span>
                   </a>
@@ -137,9 +137,7 @@
                     <li v-if="this.currentUser?.is_admin">
                       <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                         <i class="bi bi-gear"></i>
-                        <RouterLink :to="{ path: '/admin'}">
-                          Quản lý Website
-                        </RouterLink>
+                        <RouterLink :to="{ path: '/admin' }"> Quản lý Website </RouterLink>
                       </a>
                     </li>
                     <li>
@@ -230,7 +228,12 @@ export default {
             confirmButtonText: "OK",
             timer: 1500,
           }).then(() => {
-            window.location.reload();
+            // Kiểm tra nếu đang ở trang thông tin cá nhân thì chuyển hướng về trang chủ
+            if (this.$route.path === "/thongtincanhan") {
+              this.$router.push("/");
+            } else {
+              window.location.reload(); // Nếu không, reload lại trang
+            }
           });
         }
       });

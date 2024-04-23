@@ -329,11 +329,15 @@ export default {
         });
         this.ShowStories();
         console.log("Post add story", response.data);
-        swal.fire({
-          title: "Đã thêm",
-          text: "Đã thêm truyện mới thành công",
-          icon: "success",
-        });
+        swal
+          .fire({
+            title: "Đã thêm",
+            text: "Đã thêm truyện mới thành công",
+            icon: "success",
+          })
+          .then(() => {
+            window.location.reload();
+          });
         this.newStory = {
           avt: null,
           ten: null,
