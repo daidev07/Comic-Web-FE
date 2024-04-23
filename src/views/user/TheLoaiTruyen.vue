@@ -30,16 +30,17 @@
     </main>
     <!-- End #main -->
   </div>
+  <Footer/>
 </template>
 
 <script>
 import SideBar from "./Sidebar.vue";
-import Header from "../../components/Header.vue";
+import Footer from "@/components/Footer.vue";
 import axios from "axios";
 import HeaderUser from "@/components/HeaderUser.vue";
 export default {
   name: "TheLoaiTruyen",
-  components: { SideBar, HeaderUser },
+  components: { SideBar, HeaderUser, Footer },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,

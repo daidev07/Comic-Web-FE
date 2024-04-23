@@ -18,15 +18,8 @@
                     <div class="container w-100">
                         <ul class="responsive-table d-flex flex-wrap w-100">
                             <li class="table-row" v-for="category in categories" :key="category.id">
-                                <div class="col col-2 h5 align-items-center">{{ category.ten }}</div>
+                                <div class="h5 align-items-center">{{ category.ten }}</div>
                                 <div class="d-flex">
-                                    <div class="col" data-label="Customer Name">
-                                        <button class="btn" style="background-color: #1e3a63; color: white"
-                                            data-bs-toggle="modal" data-bs-target="#modalInfo"
-                                            @click=updateCate(category)>
-                                            <i class="bi bi-pencil-square"></i>
-                                        </button>
-                                    </div>
                                     <div class="col text-center" data-label="Amount">
                                         <button class="btn ms-2" style="background-color: #1e3a63; color: white"
                                             @click=deleteCate(category.id)>
@@ -70,24 +63,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal cập nhật -->
-
-    <!-- TOAST -->
-    <!-- <button type="button" class="btn btn-primary" id="liveToastBtn">Show live toast</button>
-
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
-        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
-                <strong class="me-auto">Thông báo</strong>
-                <small>Ngay bây giờ</small>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-                Thêm thành công
-            </div>
-        </div>
-    </div> -->
 </template>
 
 <script>
@@ -120,7 +95,6 @@ export default {
     methods: {
         async ShowCates() {
             try {
-                //console.log(2222, this.categories);
                 const reponse = await axios.get("http://localhost:8000/api/category");
                 this.categories = reponse.data;
             } catch (error) {
@@ -144,7 +118,6 @@ export default {
         deleteCate(ctgId) {
             this.selected = this.categories.find(category => category.id === ctgId)
             const deleteCateId = this.selected.id
-            console.log(this.selected.id)
             swal.fire({
                 title: "Bạn muốn xóa?",
                 text: "Bạn có chắc chắn muốn xóa truyện không?",
@@ -175,9 +148,6 @@ export default {
                 }
             });
         },
-        updateCate() {
-
-        }
 
     },
 };

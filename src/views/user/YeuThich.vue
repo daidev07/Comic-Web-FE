@@ -9,30 +9,43 @@
         </div>
         <!-- list item -->
         <div class="d-flex flex-wrap" style="gap: 10px">
-          <div v-if="checkFavorites" class="mt-3 fw-bold h4">
-            <p>Bạn chưa thêm yêu thích truyện nào</p>
+          <div v-if="!this.currentUser" class="mt-3 fw-bold h4">
+            <p>Vui lòng đăng nhập để sử dụng tính năng thêm vào yêu thích</p>
           </div>
-          <!-- item -->
-          <div v-else class="card mb-0" v-for="story in favoriteStories" :key="story.id">
-            <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
-              <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" />
-              </RouterLink>
+          <div v-else>
+            <div v-if="checkFavorites" class="mt-3 fw-bold h4">
+              <p>Bạn chưa thêm yêu thích truyện nào</p>
+            </div>
+            <div v-else class="d-flex flex-wrap" style="gap: 10px">
+            <!-- item -->
+            <div class="card mb-0" v-for="story in favoriteStories" :key="story.id">
+              <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
+                <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link">
+                  <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
+                    style="height: 220px" />
+                </RouterLink>
 
-              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{ story.ten }} </RouterLink>
-              <div class="d-flex justify-content-between">
-                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
-                <span style="font-size: 10px; margin-top: 6px">{{ getLatestChapterInfo[story.id].time }}</span>
+                <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${story.id}` }"> {{
+            story.ten }} </RouterLink>
+                <div class="d-flex justify-content-between">
+                  <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }">
+                    Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
+                  <span style="font-size: 10px; margin-top: 6px">{{ getLatestChapterInfo[story.id].time }}</span>
+                </div>
               </div>
             </div>
+            <!-- End item -->
           </div>
-          <!-- End item -->
+        </div>
+
+
         </div>
         <!-- End list item -->
       </div>
     </main>
     <!-- End #main -->
   </div>
+  <Footer />
 </template>
 
 <script>
@@ -40,9 +53,10 @@ import SideBar from "./Sidebar.vue";
 import Header from "../../components/Header.vue";
 import axios from "axios";
 import HeaderUser from "@/components/HeaderUser.vue";
+import Footer from "@/components/Footer.vue";
 export default {
   name: "YeuThich",
-  components: { SideBar, HeaderUser },
+  components: { SideBar, HeaderUser, Footer },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,

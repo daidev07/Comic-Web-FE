@@ -11,7 +11,8 @@
         <div class="card mb-3">
           <div class="row g-0 align-items-center" style="margin-top: -12px; margin-bottom: 6px">
             <div class="col-md-4 d-flex flex-column gap-2">
-              <img :src="avtBase64String ? 'data:image/png;base64,' + avtBase64String : apiUrl + '/' + currentUser.avt" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 450px; height: 450px" />
+              <img v-if="!this.currentUser.avt" src="assets/img/profile-img.jpg" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 450px; height: 450px" />
+              <img v-else :src="avtBase64String ? 'data:image/png;base64,' + avtBase64String : apiUrl + '/' + currentUser.avt" class="img-fluid rounded-3 mt-3 ms-3" alt="..." style="width: 450px; height: 450px" />
               <input ref="uploadInput" type="file" class="d-none" style="width: 450px; height: 450px" @change="handleUpload" />
               <button class="btn btn-primary ms-3 w-100" @click="$refs.uploadInput.click()">Tải ảnh lên</button>
             </div>
@@ -75,17 +76,18 @@
     </div>
   </div>
   <!-- End Modal thay đổi mật khẩu -->
+  <Footer/>
 </template>
 
 <script>
 import SideBar from "./Sidebar.vue";
-import Header from "../../components/Header.vue";
+import Footer from "@/components/Footer.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 import HeaderUser from "@/components/HeaderUser.vue";
 export default {
   name: "ThongTinCaNhan",
-  components: { SideBar, HeaderUser },
+  components: { SideBar, HeaderUser, Footer },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,

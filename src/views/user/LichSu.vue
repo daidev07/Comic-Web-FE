@@ -10,25 +10,35 @@
 
         <!-- list item -->
         <div class="d-flex flex-wrap" style="gap: 10px">
-          <div v-if="checkHistories" class="mt-3 fw-bold h4">
-            <p>Bạn chưa đọc bất kỳ truyện nào</p>
+          <div v-if="!this.currentUser" class="mt-3 fw-bold h4">
+            <p>Vui lòng đăng nhập để sử dụng tính năng xem lại truyện đã đọc</p>
           </div>
-          <!-- item -->
-          <div v-else class="card mb-0" v-for="historyStory in historyStories" :key="historyStory.id">
-            <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
-              <RouterLink :to="{ path: `/chitiet/${historyStory.story.id}` }" class="image-link">
-                <img :src="`${this.apiUrl}/${historyStory.story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" />
-                <a class="card-text text-center d-block mt-2">
-                  {{ historyStory.ten }}
-                </a>
-              </RouterLink>
-              <RouterLink class="card-text text-center d-block mt-3" :to="{ path: `/chitiet/${historyStory.story.id}` }"> {{ historyStory.story.ten }} </RouterLink>
-              <div class="d-flex justify-content-between">
-                <a style="font-size: 13px">Lần cuối đọc</a>
-                <span style="font-size: 10px; margin-top: 3px">{{ formatTimeAgo(historyStory.lan_cuoi_doc) }}</span>
+          <div v-else>
+            <div v-if="checkHistories" class="mt-3 fw-bold h4">
+              <p>Bạn chưa đọc bất kỳ truyện nào</p>
+            </div>
+            <div v-else class="d-flex flex-wrap" style="gap: 10px">
+              <!-- item -->
+              <div class="card mb-0" v-for="historyStory in historyStories" :key="historyStory.id">
+                <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
+                  <RouterLink :to="{ path: `/chitiet/${historyStory.story.id}` }" class="image-link">
+                    <img :src="`${this.apiUrl}/${historyStory.story.avt}`" class="card-img-top rounded-2" alt="..."
+                      style="height: 220px" />
+                    <a class="card-text text-center d-block mt-2">
+                      {{ historyStory.ten }}
+                    </a>
+                  </RouterLink>
+                  <RouterLink class="card-text text-center d-block mt-3"
+                    :to="{ path: `/chitiet/${historyStory.story.id}` }"> {{ historyStory.story.ten }} </RouterLink>
+                  <div class="d-flex justify-content-between">
+                    <a style="font-size: 13px">Lần cuối đọc</a>
+                    <span style="font-size: 10px; margin-top: 3px">{{ formatTimeAgo(historyStory.lan_cuoi_doc) }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+
           <!-- End item -->
         </div>
         <!-- End list item -->
@@ -36,11 +46,13 @@
     </main>
     <!-- End #main -->
   </div>
+  <Footer />
 </template>
 
 <script>
 import SideBar from "./Sidebar.vue";
 import HeaderUser from "../../components/HeaderUser.vue";
+import Footer from "@/components/Footer.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -60,9 +72,17 @@ export default {
         },
       ],
       checkHistories: true,
+      currentUser: {
+        id: null,
+        hoten: null,
+        avt: null,
+        email: null,
+        username: null,
+        password: null,
+      },
     };
   },
-  components: { SideBar, HeaderUser },
+  components: { SideBar, HeaderUser, Footer },
   mounted() {
     this.currentUser = JSON.parse(window.localStorage.getItem("loggedInUser"));
     this.showHistory();

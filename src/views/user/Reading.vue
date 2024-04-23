@@ -42,13 +42,13 @@
     </main>
     <!-- End #main -->
   </div>
+  <Footer/>
 </template>
 
 <script>
 import SideBar from "./Sidebar.vue";
-import Header from "../../components/Header.vue";
 import axios from "axios";
-import { toast } from "vue3-toastify";
+import Footer from "@/components/Footer.vue";
 import "vue3-toastify/dist/index.css";
 import swal from "sweetalert2";
 import HeaderUser from "@/components/HeaderUser.vue";
@@ -63,7 +63,7 @@ export default {
       detailPath: null,
     };
   },
-  components: { SideBar, HeaderUser },
+  components: { SideBar, HeaderUser, Footer },
   mounted() {
     this.storyId = this.$route.params.id;
     console.log("ID STORY CỦA CHƯƠNG NÀY:: ", this.storyId);
