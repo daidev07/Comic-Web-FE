@@ -42,7 +42,7 @@
     </main>
     <!-- End #main -->
   </div>
-  <Footer/>
+  <Footer />
 </template>
 
 <script>

@@ -9,30 +9,22 @@
             <!-- Slides with captions -->
             <div id="carouselExampleCaptions" class="carousel slide carousel-small" data-bs-ride="carousel">
               <div class="carousel-indicators">
-                <button type="button" v-for="(slide, index) in slides" :key="index"
-                  data-bs-target="#carouselExampleCaptions" :data-bs-slide-to="index" :class="{ active: index === 0 }"
-                  aria-current="true" :aria-label="'Slide ' + (index + 1)"></button>
+                <button type="button" v-for="(slide, index) in slides" :key="index" data-bs-target="#carouselExampleCaptions" :data-bs-slide-to="index" :class="{ active: index === 0 }" aria-current="true" :aria-label="'Slide ' + (index + 1)"></button>
               </div>
               <div class="carousel-inner">
-                <div class="carousel-item bg-danger-subtle" v-for="(slide, index) in slides" :key="index"
-                  :class="{ active: index === 0 }">
+                <div class="carousel-item bg-danger-subtle" v-for="(slide, index) in slides" :key="index" :class="{ active: index === 0 }">
                   <RouterLink :to="{ path: `/chitiet/${slide.story.id}` }">
                     <img :src="`${this.apiUrl}/${slide.story.avt}`" class="d-block w-100" alt="..." />
                   </RouterLink>
-                  <div class="carousel-caption d-none d-md-block fs-2" style="text-shadow: -1px -1px 0 rgba(0,
-                    0, 0, 1), 1px -1px 0 rgba(0, 0, 0, 1), -1px 1px 0 rgba(0, 0, 0, 1), 1px 1px 0 rgba(0, 0,
-                    0, 1);">{{
-                  slide.story.ten }}</div>
+                  <div class="carousel-caption d-none d-md-block fs-2" style="text-shadow: -1px -1px 0 rgba(0, 0, 0, 1), 1px -1px 0 rgba(0, 0, 0, 1), -1px 1px 0 rgba(0, 0, 0, 1), 1px 1px 0 rgba(0, 0, 0, 1)">{{ slide.story.ten }}</div>
                 </div>
               </div>
 
-              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
-                data-bs-slide="prev">
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
               </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
-                data-bs-slide="next">
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
               </button>
@@ -48,12 +40,11 @@
           <div class="swiper-container overflow-x-hidden position-relative">
             <div class="swiper-wrapper">
               <!-- Loop through stories -->
-              <div class="swiper-slide" v-for="story in topViewStories" :key="story.id">
+              <div data-aos="fade-up" class="swiper-slide" v-for="story in topViewStories" :key="story.id">
                 <div class="card">
                   <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
                     <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
-                      <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
-                        style="height: 220px" @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
+                      <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" @mouseover="hoveredImg = true" @mouseleave="hoveredImg = false" />
                       <div class="text-center mt-3">
                         {{ story.ten }}
                       </div>
@@ -83,18 +74,16 @@
         <!-- list item -->
         <div class="d-flex flex-wrap" style="gap: 10px">
           <!-- item -->
-          <div class="card mb-0" v-for="story in stories" :key="story.id">
+          <div data-aos="zoom-in" class="card mb-0" v-for="story in stories" :key="story.id">
             <div class="card-body col-lg-2" style="width: calc((1143px - 50px) / 6)">
               <RouterLink :to="{ path: `/chitiet/${story.id}` }" class="image-link text-center mt-3">
-                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..."
-                  style="height: 220px" />
+                <img :src="`${this.apiUrl}/${story.avt}`" class="card-img-top rounded-2" alt="..." style="height: 220px" />
                 <div class="text-center mt-3" @mouseover="showOverlay = true" @mouseleave="showOverlay = false">
                   {{ story.ten }}
                 </div>
               </RouterLink>
               <div class="d-flex justify-content-between">
-                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }">
-                  Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
+                <RouterLink :to="{ path: `/chitiet/${story.id}/doc-truyen/${getLatestChapterInfo[story.id]?.id}` }"> Chap {{ getLatestChapterInfo[story.id]?.so }} </RouterLink>
                 <span style="font-size: 10px; margin-top: 6px">{{ getLatestChapterInfo[story.id].time }}</span>
               </div>
             </div>
@@ -112,7 +101,7 @@
     </main>
     <!-- End #main -->
   </div>
-  <Footer/>
+  <Footer />
 </template>
 
 <script>
@@ -122,6 +111,8 @@ import HeaderUser from "../../components/HeaderUser.vue";
 import Footer from "../../components/Footer.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
+import AOS from "aos";
+import "aos/dist/aos.css"; // You can also use <link> for styles
 export default {
   name: "HomePage",
   components: { SideBar, HeaderUser, Footer },
@@ -149,6 +140,26 @@ export default {
     };
   },
   mounted() {
+    AOS.init({
+      // Global settings:
+      disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
+      startEvent: "DOMContentLoaded", // name of the event dispatched on the document, that AOS should initialize on
+      initClassName: "aos-init", // class applied after initialization
+      animatedClassName: "aos-animate", // class applied on animation
+      useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
+      disableMutationObserver: false, // disables automatic mutations' detections (advanced)
+      debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
+      throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+
+      // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
+      offset: 120, // offset (in px) from the original trigger point
+      delay: 0, // values from 0 to 3000, with step 50ms
+      duration: 800, // values from 0 to 3000, with step 50ms
+      easing: "ease", // default easing for AOS animations
+      once: false, // whether animation should happen only once - while scrolling down
+      mirror: false, // whether elements should animate out while scrolling past them
+      anchorPlacement: "top-bottom", // defines which position of the element regarding to window should trigger the animation
+    });
     this.ShowStories();
     new Swiper(".swiper-container", {
       slidesPerView: "6",
@@ -309,7 +320,7 @@ a {
 } */
 
 /* Hiển thị hộp thoại khi hover vào ảnh */
-.card-img-top:hover+.image-overlay {
+.card-img-top:hover + .image-overlay {
   display: block;
 }
 

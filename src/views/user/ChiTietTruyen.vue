@@ -50,18 +50,18 @@
           <h1 class="fw-bold text-white bg-primary p-1 rounded-1 ps-2 text-center">GIỚI THIỆU</h1>
         </div>
         <!-- Mô tả nội dung -->
-        <div class="card p-2">
+        <div data-aos="zoom-in" class="card p-2">
           <h5>{{ detailTruyen.gioithieu }}</h5>
         </div>
         <!-- End Mô tả nội dung -->
-        <div class="pagetitle" style="margin-top: -18px">
+        <div data-aos="zoom-in" class="pagetitle" style="margin-top: -18px">
           <h1 class="fw-bold p-1 rounded-1 ps-2 text-center text-white bg-primary">DANH SÁCH CHƯƠNG</h1>
         </div>
         <!-- Danh sách chương -->
         <div class="card p-2">
           <!-- Default Table -->
           <table class="table">
-            <thead>
+            <thead data-aos="zoom-in">
               <tr class="fs-4">
                 <th class="fw-bold" scope="col">Tên chương</th>
                 <th class="fw-bold col-2 text-center" scope="col">Trạng thái</th>
@@ -70,7 +70,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="fs-8" v-for="chapter in chapters" :key="chapter?.id">
+              <tr data-aos="zoom-in" class="fs-8" v-for="chapter in chapters" :key="chapter?.id">
                 <td scope="row" style="font-size: 18px" @click="clickChapter(chapter.id)">
                   <RouterLink :to="{ path: `${truyenId}/doc-truyen/${chapter.id}` }" :class="{ 'fw-bold': isChapterRead(chapter.id) }" class="text-black"> Chapter {{ chapter.so }}: {{ chapter.ten }} </RouterLink>
                 </td>
@@ -90,15 +90,15 @@
         <!-- End Danh sách chương -->
 
         <div class="pagetitle" style="margin-top: -18px">
-          <h1 class="fw-bold p-1 rounded-1 ps-2 text-center text-white bg-primary">BÌNH LUẬN</h1>
-          <div class="mt-2">
+          <h1 data-aos="zoom-in" class="fw-bold p-1 rounded-1 ps-2 text-center text-white bg-primary">BÌNH LUẬN</h1>
+          <div data-aos="zoom-in" class="mt-2">
             <textarea v-model="newComment.noidung" class="form-control binhluan" rows="3" id="message-text" placeholder="Người tiện tay vẽ hoa vẽ lá, tôi đa tình tưởng đó là mùa xuân..."></textarea>
           </div>
-          <div class="d-flex justify-content-end mt-1">
+          <div data-aos="zoom-in" class="d-flex justify-content-end mt-1">
             <button @click="addNewComment()" type="button" class="btn btn-success my-1 px-3">Gửi</button>
           </div>
 
-          <div class="d-flex w-100" v-for="comment in comments" :key="comment.id">
+          <div data-aos="zoom-in" class="d-flex w-100" v-for="comment in comments" :key="comment.id">
             <img :src="apiUrl + '/' + comment?.user.avt" alt="Profile" class="rounded-circle mt-2" style="height: 50px; width: 50px" />
             <div class="nguoibinhluan d-flex flex-column mb-2 w-100 ms-2">
               <div class="">
@@ -134,7 +134,7 @@
     </main>
     <!-- End #main -->
   </div>
-<Footer/>
+  <Footer />
   <!-- TOAST -->
 </template>
 
@@ -144,6 +144,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import HeaderUser from "@/components/HeaderUser.vue";
 import Footer from "@/components/Footer.vue";
+import AOS from "aos";
+import "aos/dist/aos.css"; // You can also use <link> for styles
 export default {
   name: "ChiTietTruyen",
   components: { SideBar, HeaderUser, Footer },
@@ -196,6 +198,26 @@ export default {
     this.fetchChapters();
     this.fetchHistory();
     this.isYourCmt();
+    AOS.init({
+      // Global settings:
+      disable: false, // accepts following values: 'phone', 'tablet', 'mobile', boolean, expression or function
+      startEvent: "DOMContentLoaded", // name of the event dispatched on the document, that AOS should initialize on
+      initClassName: "aos-init", // class applied after initialization
+      animatedClassName: "aos-animate", // class applied on animation
+      useClassNames: false, // if true, will add content of `data-aos` as classes on scroll
+      disableMutationObserver: false, // disables automatic mutations' detections (advanced)
+      debounceDelay: 50, // the delay on debounce used while resizing window (advanced)
+      throttleDelay: 99, // the delay on throttle used while scrolling the page (advanced)
+
+      // Settings that can be overridden on per-element basis, by `data-aos-*` attributes:
+      offset: 120, // offset (in px) from the original trigger point
+      delay: 0, // values from 0 to 3000, with step 50ms
+      duration: 800, // values from 0 to 3000, with step 50ms
+      easing: "ease", // default easing for AOS animations
+      once: false, // whether animation should happen only once - while scrolling down
+      mirror: false, // whether elements should animate out while scrolling past them
+      anchorPlacement: "top-bottom", // defines which position of the element regarding to window should trigger the animation
+    });
   },
   methods: {
     async getDetailStory() {
