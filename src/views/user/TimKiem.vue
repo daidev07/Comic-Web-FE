@@ -33,14 +33,16 @@
     </main>
     <!-- End #main -->
   </div>
+  <Footer/>
 </template>
 
 <script>
 import axios from "axios";
 import HeaderUser from "@/components/HeaderUser.vue";
+import Footer from "@/components/Footer.vue";
 export default {
   name: "TimKiem",
-  components: { HeaderUser },
+  components: { HeaderUser, Footer },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,

@@ -16,7 +16,9 @@
               <div class="carousel-inner">
                 <div class="carousel-item bg-danger-subtle" v-for="(slide, index) in slides" :key="index"
                   :class="{ active: index === 0 }">
-                  <img :src="`${this.apiUrl}/${slide.story.avt}`" class="d-block w-100" alt="..." />
+                  <RouterLink :to="{ path: `/chitiet/${slide.story.id}` }">
+                    <img :src="`${this.apiUrl}/${slide.story.avt}`" class="d-block w-100" alt="..." />
+                  </RouterLink>
                   <div class="carousel-caption d-none d-md-block fs-2" style="text-shadow: -1px -1px 0 rgba(0,
                     0, 0, 1), 1px -1px 0 rgba(0, 0, 0, 1), -1px 1px 0 rgba(0, 0, 0, 1), 1px 1px 0 rgba(0, 0,
                     0, 1);">{{
@@ -110,107 +112,19 @@
     </main>
     <!-- End #main -->
   </div>
-  <hr class="w-100" />
-  <div style="margin-left: 380px; margin-right: 380px">
-    <div class="">
-      <div class="row">
-        <div class="col-6">
-          <div class="d-flex flex-column justify-content-center align-items-center">
-            <img src="/assets/img/logo.png" class="w-100" />
-            <p class="blog-paragraph fs-6 mt-3">Subscribe to our newsletter to get updates about our grand offers.</p>
-            <div class="social-links">
-              <ul class="d-flex list-unstyled gap-2">
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:facebook-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:twitter-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:pinterest-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:instagram-fill"></iconify-icon>
-                  </a>
-                </li>
-                <li class="social">
-                  <a href="#">
-                    <iconify-icon class="social-icon" icon="ri:youtube-fill"></iconify-icon>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-3">
-          <div class="footer-menu">
-            <h3>Quick Links</h3>
-            <ul class="menu-list list-unstyled">
-              <li class="menu-item">
-                <a href="#" class="nav-link">Home</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">About us</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Offer </a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Services</a>
-              </li>
-              <li class="menu-item">
-                <a href="#" class="nav-link">Conatct Us</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-3">
-          <div>
-            <h3>Our Newsletter</h3>
-            <p class="blog-paragraph fs-6">Subscribe to our newsletter to get updates about our grand offers.</p>
-            <div class="search-bar border rounded-pill border-dark-subtle px-2">
-              <form class="text-center d-flex align-items-center" action="" method="">
-                <input type="text" class="form-control border-0 bg-transparent" placeholder="Enter your email here" />
-                <iconify-icon class="send-icon" icon="tabler:location-filled"></iconify-icon>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div id="footer-bottom">
-    <!-- <hr class="w-100" /> -->
-    <div style="margin-left: 380px; margin-right: 380px">
-      <div class="row mt-3 bg-danger-subtle">
-        <div class="col-md-6 copyright">
-          <p class="secondary-font d-flex align-items-center h-100">© 2024 LorComic. All rights reserved.</p>
-        </div>
-        <div class="col-md-6 text-md-end text-primary mt-3" style="">
-          <p class="secondary-font">Back-end by <a href="https://www.facebook.com/novd.07" target="_blank" class="text-decoration-underline fw-bold text-black-50"> Hồ Xuân Đại</a></p>
-          <p class="secondary-font">Front-end by <a href="https://www.facebook.com/JinkoLynn/" target="_blank" class="text-decoration-underline fw-bold text-black-50"> Hồ Phan Minh Tuấn</a></p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <Footer/>
 </template>
 
 <script>
 import SideBar from "./Sidebar.vue";
 import Swiper from "swiper/bundle";
 import HeaderUser from "../../components/HeaderUser.vue";
+import Footer from "../../components/Footer.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 export default {
   name: "HomePage",
-  components: { SideBar, HeaderUser },
+  components: { SideBar, HeaderUser, Footer },
   data() {
     return {
       apiUrl: process.env.VUE_APP_URL,
@@ -304,7 +218,6 @@ export default {
         const reponse = await axios.get("http://localhost:8000/api/story");
         this.stories = reponse.data.reverse();
         this.storiesolds = this.stories;
-        console.log("DANH SÁCH TRUYỆN:: ", this.stories);
       } catch (error) {
         console.error("Error fetching stories data:", error);
       }

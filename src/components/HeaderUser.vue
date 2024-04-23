@@ -91,14 +91,14 @@
                   </li>
                 </ul>
               </li>
-              <li class="nav-item" @click="checkLogIn()" @mouseenter="hoveredItem = 3" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 3 ? 'red' : '' }">
+              <li class="nav-item"  @mouseenter="hoveredItem = 3" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 3 ? 'red' : '' }">
                 <RouterLink class="nav-link" :to="{ path: '/lichsu' }">
                   <span>Lịch sử</span>
                 </RouterLink>
               </li>
               <!-- End Lịch sử -->
 
-              <li class="nav-item" @click="checkLogIn()" @mouseenter="hoveredItem = 4" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 4 ? 'red' : '' }">
+              <li class="nav-item"  @mouseenter="hoveredItem = 4" @mouseleave="hoveredItem = 0" :style="{ backgroundColor: hoveredItem === 4 ? 'red' : '' }">
                 <RouterLink class="nav-link" :to="{ path: '/yeuthich' }">
                   <span>Danh sách yêu thích</span>
                 </RouterLink>
@@ -110,7 +110,8 @@
               <ul class="d-flex justify-content-end list-unstyled m-0">
                 <li class="nav-item dropdown pe-3 profileUser" v-if="isLoggedIn">
                   <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img :src="apiUrl + '/' + currentUser.avt" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px" />
+                    <img v-if="!currentUser.avt" src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px"/>
+                    <img v-else :src="apiUrl + '/' + currentUser.avt" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px" />
                     <span class="d-none d-md-block dropdown-toggle ps-2">{{ this.currentUser.hoten }}</span>
                   </a>
 
@@ -126,17 +127,19 @@
                     <li>
                       <RouterLink :to="{ path: '/thongtincanhan' }" class="dropdown-item d-flex align-items-center">
                         <i class="bi bi-person"></i>
-                        <span>My Profile</span>
+                        <span>Trang cá nhân</span>
                       </RouterLink>
                     </li>
                     <li>
                       <hr class="dropdown-divider" />
                     </li>
 
-                    <li>
+                    <li v-if="this.currentUser?.is_admin">
                       <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
                         <i class="bi bi-gear"></i>
-                        <span>Account Settings</span>
+                        <RouterLink :to="{ path: '/admin'}">
+                          Quản lý Website
+                        </RouterLink>
                       </a>
                     </li>
                     <li>
@@ -146,7 +149,7 @@
                     <li>
                       <a class="dropdown-item d-flex align-items-center" href="pages-faq.html">
                         <i class="bi bi-question-circle"></i>
-                        <span>Need Help?</span>
+                        <span>Trợ giúp</span>
                       </a>
                     </li>
                     <li>
@@ -156,7 +159,7 @@
                     <li>
                       <a class="dropdown-item d-flex align-items-center" href="#">
                         <i class="bi bi-box-arrow-right"></i>
-                        <span @click="logoutClick()">Sign Out</span>
+                        <span @click="logoutClick()">Đăng xuất</span>
                       </a>
                     </li>
                   </ul>

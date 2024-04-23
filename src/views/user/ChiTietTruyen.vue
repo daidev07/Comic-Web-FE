@@ -134,7 +134,7 @@
     </main>
     <!-- End #main -->
   </div>
-
+<Footer/>
   <!-- TOAST -->
 </template>
 
@@ -143,9 +143,10 @@ import SideBar from "./Sidebar.vue";
 import axios from "axios";
 import Swal from "sweetalert2";
 import HeaderUser from "@/components/HeaderUser.vue";
+import Footer from "@/components/Footer.vue";
 export default {
   name: "ChiTietTruyen",
-  components: { SideBar, HeaderUser },
+  components: { SideBar, HeaderUser, Footer },
   data() {
     return {
       localUrl: "http://localhost:7777",

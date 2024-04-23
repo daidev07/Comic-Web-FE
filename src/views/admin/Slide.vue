@@ -232,7 +232,7 @@ h2 {
             color: #ffffff;
         }
 
-        .table-row {}
+
 
         li {
             display: block;
