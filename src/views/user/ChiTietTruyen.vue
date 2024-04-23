@@ -99,7 +99,7 @@
           </div>
 
           <div class="d-flex w-100" v-for="comment in comments" :key="comment.id">
-            <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle mt-2" style="height: 50px; width: 50px" />
+            <img :src="apiUrl + '/' + comment?.user.avt" alt="Profile" class="rounded-circle mt-2" style="height: 50px; width: 50px" />
             <div class="nguoibinhluan d-flex flex-column mb-2 w-100 ms-2">
               <div class="">
                 <label for="" class="fw-bold ms-1" style="color: green">{{ comment?.user.hoten }}</label>

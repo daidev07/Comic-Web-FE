@@ -6,7 +6,7 @@
         <div class="col-sm-4 col-lg-3 text-center text-sm-start">
           <div class="main-logo">
             <RouterLink :to="{ path: '/' }">
-              <img src="/waggy/images/logo.png" alt="logo" class="img-fluid" />
+              <img src="/assets/img/logo.png" alt="logo" class="img-fluid" style="width: 300px; height: 80px" />
             </RouterLink>
           </div>
         </div>
@@ -24,12 +24,12 @@
 
         <div class="col-sm-8 col-lg-4 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
           <div class="support-box text-end d-none d-xl-block">
-            <span class="fs-6 secondary-font text-muted">Phone</span>
-            <h5 class="mb-0">+980-34984089</h5>
+            <span class="fs-6 secondary-font text-muted">Facebook</span>
+            <h5 class="mb-0">www.facebook.com/lorcomic</h5>
           </div>
           <div class="support-box text-end d-none d-xl-block">
             <span class="fs-6 secondary-font text-muted">Email</span>
-            <h5 class="mb-0">waggy@gmail.com</h5>
+            <h5 class="mb-0">lorcomic@gmail.com</h5>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@
               <ul class="d-flex justify-content-end list-unstyled m-0">
                 <li class="nav-item dropdown pe-3 profileUser" v-if="isLoggedIn">
                   <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="/assets/img/profile-img.jpg" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px" />
+                    <img :src="apiUrl + '/' + currentUser.avt" alt="Profile" class="rounded-circle" style="width: 50px; height: 50px" />
                     <span class="d-none d-md-block dropdown-toggle ps-2">{{ this.currentUser.hoten }}</span>
                   </a>
 
@@ -186,6 +186,7 @@ export default {
   components: {},
   data() {
     return {
+      apiUrl: process.env.VUE_APP_URL,
       currentUser: {
         id: "",
         hoten: "",
